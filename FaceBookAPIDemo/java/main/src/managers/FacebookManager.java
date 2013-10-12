@@ -18,22 +18,21 @@ public class FacebookManager {
 		cb.setDebugEnabled(true).setOAuthAppId(Global.OAuthAppId)
 				.setOAuthAppSecret(Global.OAuthAppSecret)
 				.setOAuthAccessToken(Global.OAuthAccessToken)
-				.setOAuthPermissions("email,publish_stream,read_stream,...");
+				.setOAuthPermissions("email,publish_stream,read_stream,user_status,user_likes,publish_actions...");
 
 		FacebookFactory ff = new FacebookFactory(cb.build());
 		facebook = ff.getInstance();
+		
 	}
 
 	public boolean postStatus(String status) {
 		if (Global.OAuthAccessToken != null) {
 			try {
 				facebook.postStatusMessage(status);
-				System.out.println("access token" + facebook.getOAuthAccessToken());
-				System.out.println("app" + facebook.getOAuthAppAccessToken());
 				return true;
 			} catch (FacebookException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.out.println(e);
 			}
 
 		}

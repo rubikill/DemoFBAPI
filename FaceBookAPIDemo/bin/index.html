@@ -7,12 +7,11 @@
 <link href='css/bootstrap.min.css' rel='stylesheet' media='screen'>
 <link href='css/home.css' rel='stylesheet' media='screen'>
 
-<script src='js/facebook.js' type='text/javascript'></script>
-
 </head>
 <body ng-app="app">
 	<div id="fb-root"></div>
 	<div class="container-narrow" ng-controller="HomeCtrl">
+		<fb:login-button scope="email,user_likes,publish_actions" show-faces="true" width="200" max-rows="1"></fb:login-button>
 
 		<div class="masthead">
 			<ul class="nav nav-pills pull-right">
@@ -24,12 +23,11 @@
 		</div>
 
 		<hr>
-		<fb:login-button show-faces="true" width="200" max-rows="1"></fb:login-button>
-		<div class="jumbotron" >
-			
+		<div class="jumbotron">
+
 			<textarea rows="5" ng-model="content"></textarea>
 
-			<button class="btn btn-large btn-success" ng-click="post()">Post
+			<button class="btn btn-large btn-success" ng-click="postStatus()">Post
 				to Thanh Toan FB</button>
 			<!-- <button clas="btn btn-success" ">Conect to FB</button> -->
 		</div>
@@ -40,7 +38,7 @@
 			<p>© Ha Thanh Toan 2013</p>
 		</div>
 	</div>
-	
+
 	<script src='js/lib/jquery-1.9.0.min.js' type='text/javascript'></script>
 	<script src='js/lib/jquery-ui.min.js' type='text/javascript'></script>
 	<script src='js/lib/bootstrap-responsive.min.js' type='text/javascript'></script>
