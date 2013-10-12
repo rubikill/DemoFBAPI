@@ -19,6 +19,9 @@ object ApplicationBuild extends Build {
     // Add your own project settings here      
     javaSource in Compile <<= baseDirectory / "java/main/src",
     
+    // Adds config/routes to continious triggers
+        watchSources <+= confDirectory map { _ / "routes" },
+    
     // Assets
         playAssetsDirectories := Seq.empty[File],
         playAssetsDirectories <+= baseDirectory / "java/main/resource"

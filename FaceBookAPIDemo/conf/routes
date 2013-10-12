@@ -5,5 +5,8 @@
 # Home page
 GET     /                           controllers.Application.index()
 
+GET    /status                      controllers.Application.getStatus()
+POST   /status/:content             controllers.Application.postStatus(content: String)
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /*file                      controllers.Assets.at(path="/java/main/resource", file)
