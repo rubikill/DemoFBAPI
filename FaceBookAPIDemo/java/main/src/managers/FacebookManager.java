@@ -15,8 +15,8 @@ public class FacebookManager {
 		// TODO Auto-generated constructor stub
 		ConfigurationBuilder cb = new ConfigurationBuilder();
 		cb.setDebugEnabled(true)
-				.setOAuthAppId("380947045341754")
-				.setOAuthAppSecret("254eb1b852604f862034e642746b4e6a")
+				.setOAuthAppId("163257810547958")
+				.setOAuthAppSecret("17588d6f705be66d58d29a73e3308515")
 				.setOAuthAccessToken(
 						"CAAFaeCVQ2joBAFTIdNXKqArdezi6BZB4qj9JIODZB8N0oBQZBRp5YfTbtfGeemeXy4GOoO3HlI50DgeoGNQBLrRyYCfO6bpspInaUeXzSJqOtApO070N9zMYRSkCLpIBFY4Jj4xZCzZCS7FPfzZB4XSdXtMuaNiJGuQzZAfpJXGZBJCHwdzk2TWTIITTxhOiWNGfam2dNq0vaQZDZD")
 				.setOAuthPermissions("email,publish_stream,read_stream,...");

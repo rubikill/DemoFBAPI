@@ -19,6 +19,11 @@
 
 </head>
 <body ng-app="app">
+	<div id="fb-root"></div>
+	
+
+	
+
 	<div class="container-narrow" ng-controller="HomeCtrl">
 
 		<div class="masthead">
@@ -35,10 +40,22 @@
 
 		<div class="jumbotron">
 			<textarea rows="5" ng-model="content"></textarea>
+<<<<<<< HEAD
 			<button class="btn btn-large btn-success" ng-click="post()">Post to Thanh Toan FB</button>
 			
 			<div class="fb-login-button" data-width="200"></div>
 		</div>
+=======
+			<button class="btn btn-large btn-success" ng-click="post()">Post
+				to Thanh Toan FB</button>
+				<fb:login-button show-faces="true" width="200" max-rows="1" ></fb:login-button>
+				<!-- <button clas="btn btn-success" ">Conect to FB</button> -->
+		</div>
+
+		<hr>
+
+		<div class="row-fluid marketing"></div>
+>>>>>>> 617e8cca9e16fbddce1e8c04430c9c01f1362849
 
 		<hr>
 
