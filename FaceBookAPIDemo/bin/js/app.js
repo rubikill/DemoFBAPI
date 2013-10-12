@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('app', ['app.services']);
+var app = angular.module('app', [ 'app.services' ]);
 
 app.config([ '$routeProvider', function($routeProvider, $rootScope) {
 	$routeProvider.otherwise({
@@ -11,10 +11,14 @@ app.config([ '$routeProvider', function($routeProvider, $rootScope) {
 var appservice = angular.module('app.services', [ 'ngResource' ]);
 
 appservice.factory('Home', function($resource) {
-	return $resource('/status', {
+	return $resource('/status/:content', {
+		content : "@content"
 	}, {
-		postStatus : {
+		getStatus : {
 			method : 'GET'
+		},
+		postStatus : {
+			method : 'POST'
 		}
 	});
 });
@@ -22,13 +26,14 @@ appservice.factory('Home', function($resource) {
 var HomeCtrl = (function($scope, Home) {
 	$scope.post = function() {
 		console.log("-----click------");
-		
-		Home.postStatus($scope.content, function(data) { // success
-			// update the model!
-			console.log($scope.content);
-		}, function(response) { // error
-			console.log("Error")
+		Home.postStatus({
+			content : $scope.content
+		}, function(data) {
+			console.log("success");
+		}, function(response) {
+			console.log("error");
+			// alertify.error(localize.getLocalizedStringWithParams("_EditTaskFail_",
+			// [response.data]));
 		});
 	}
 });
-

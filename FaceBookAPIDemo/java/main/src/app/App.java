@@ -9,6 +9,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.h2.constant.SysProperties;
 
 import utils.Tools;
+import facebook4j.Account;
 import facebook4j.Comment;
 import facebook4j.Facebook;
 import facebook4j.FacebookException;
@@ -17,6 +18,8 @@ import facebook4j.PagableList;
 import facebook4j.Post;
 import facebook4j.Reading;
 import facebook4j.ResponseList;
+import facebook4j.auth.AccessToken;
+import facebook4j.auth.AuthorizationFactory;
 import facebook4j.conf.ConfigurationBuilder;
 import facebook4j.json.DataObjectFactory;
 
@@ -27,20 +30,53 @@ public class App {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		ConfigurationBuilder cb = new ConfigurationBuilder();
-		cb.setDebugEnabled(true)
-				.setOAuthAppId("380947045341754")
-				.setOAuthAppSecret("254eb1b852604f862034e642746b4e6a")
-				.setOAuthAccessToken(
-						"CAAFaeCVQ2joBALvh11uLCPh1SmL2c2sQcJ45pqCVbAR7xBA4fAtRgqNCDNzZCZABgjoLxyyZBn5BGKEt6BOfZARavMHE57YBwjpjvVJbhQJ3tiaHxvzZA2eBDOMMZBKFYS4ZCvo0JIE0ZAZBEzjeGz5ouLaDXVkdOj5tfLtZA9cVI9fIMZBZAxCMSAEKP5ig5sQtcDwcLZB5IyiZBy2QZDZD")
-				.setOAuthPermissions("email,publish_stream,read_stream,...");
-		FacebookFactory ff = new FacebookFactory(cb.build());
-		Facebook facebook = ff.getInstance();
+		//ConfigurationBuilder cb = new ConfigurationBuilder();
+		//cb.setDebugEnabled(true)
+				//.setOAuthAppId("380947045341754")
+				//.setOAuthAppSecret("254eb1b852604f862034e642746b4e6a")
+				//.setOAuthAccessToken(
+				//		"CAAFaeCVQ2joBAEVld8MNQVZCUk5gsaXYQDiS2RuYGQncQNsGI0fZBlXbmRSr4Y7hjPZABP3tSSmUB01BUliGJaSJGm6jwUKzwKpXiOO6SqKbmq9oghEW09Pzjne2yQ4BRZAZCGxZAWudEev4gBQBtP99qk5MLis7sT2GXAp6CCT62yYZC24bk6IAUxQ8cSN5ZBxTtiPOsrDr7wZDZD")
+				//.setOAuthPermissions("email,publish_stream,read_stream,...");
+		//FacebookFactory ff = new FacebookFactory(cb.build());
+//		Facebook facebook = ff.getInstance();
+//		
+//		try {
+//			ResponseList<Account> l = facebook.getAccounts();
+//			
+//			System.out.println(l.size());
+//		} catch (FacebookException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
+		//Facebook fb = ff.getInstance();
+		
+		// App access token
+		//AccessToken oAuthAppAccessToken;
+//		try {
+//			oAuthAppAccessToken = fb.getOAuthAppAccessToken();
+//			
+//			System.out.println(oAuthAppAccessToken.getToken());
+//			
+//			fb.setOAuthAccessToken(oAuthAppAccessToken);
+//			
+//			ResponseList<Post> l = fb.getFeed();
+//			
+//			System.out.println(l.get(0).getMessage());
+//		} catch (FacebookException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 
-		try {
+
+		//AuthorizationFactory af = new AuthorizationFactory();
+		
+		//Account acc = af.get
+		//af.getInstance(conf)
+		//try {
 			// facebook.postStatusMessage("Test post status!");
 			// System.out.println("OK");
-			ResponseList<Post> feed = facebook.getHome();
+			//ResponseList<Post> feed = facebook.getHome();
 
 			// Post p = feed.get(0);
 			// System.out.println(p.getComments());
@@ -57,13 +93,19 @@ public class App {
 			//Post res = null;
 			
 
-			System.out.println(feed.get(0).toString());
+			//System.out.println(feed.get(0).toString());
 
-		} catch (FacebookException e) {
+		//} catch (FacebookException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			//e.printStackTrace();
+		//}
+		
+		
+		
+		
+		Facebook facebook = new FacebookFactory().getInstance();
 
+		facebook.getOAuthAuthorizationURL("");
 	}
 	
 	
