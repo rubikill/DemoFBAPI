@@ -4,18 +4,9 @@ import managers.FacebookManager;
 
 import org.codehaus.jackson.JsonNode;
 
-import facebook4j.Facebook;
-import facebook4j.FacebookException;
-import facebook4j.FacebookFactory;
-import facebook4j.Post;
-import facebook4j.ResponseList;
-import facebook4j.conf.ConfigurationBuilder;
-
-import play.*;
-import play.mvc.*;
-
+import play.mvc.Controller;
+import play.mvc.Result;
 import utils.Tools;
-import views.html.*;
 
 public class Application extends Controller {
   

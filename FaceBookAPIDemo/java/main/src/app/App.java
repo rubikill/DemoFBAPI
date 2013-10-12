@@ -1,24 +1,11 @@
 package app;
 
-import java.awt.print.Pageable;
-import java.io.IOException;
-import java.util.List;
-
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.h2.constant.SysProperties;
-
-import utils.Tools;
-import facebook4j.Comment;
 import facebook4j.Facebook;
 import facebook4j.FacebookException;
 import facebook4j.FacebookFactory;
-import facebook4j.PagableList;
 import facebook4j.Post;
-import facebook4j.Reading;
 import facebook4j.ResponseList;
 import facebook4j.conf.ConfigurationBuilder;
-import facebook4j.json.DataObjectFactory;
 
 public class App {
 
@@ -28,11 +15,14 @@ public class App {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		ConfigurationBuilder cb = new ConfigurationBuilder();
+		
+		
+		
 		cb.setDebugEnabled(true)
-				.setOAuthAppId("380947045341754")
-				.setOAuthAppSecret("254eb1b852604f862034e642746b4e6a")
+				.setOAuthAppId("163257810547958")
+				.setOAuthAppSecret("17588d6f705be66d58d29a73e3308515")
 				.setOAuthAccessToken(
-						"CAAFaeCVQ2joBALvh11uLCPh1SmL2c2sQcJ45pqCVbAR7xBA4fAtRgqNCDNzZCZABgjoLxyyZBn5BGKEt6BOfZARavMHE57YBwjpjvVJbhQJ3tiaHxvzZA2eBDOMMZBKFYS4ZCvo0JIE0ZAZBEzjeGz5ouLaDXVkdOj5tfLtZA9cVI9fIMZBZAxCMSAEKP5ig5sQtcDwcLZB5IyiZBy2QZDZD")
+						"CAACUe2vN9PYBAPNtRs49sZC2bfXrRhGvk1bvpiHzsrsmHdGZBxNNEVOZATJHjSMZCxNREjME4JZAZCjQ6JMaROclM0diUmJShhuX6nt4tn4XtJpjkCpqxoghrngaJ2FWVMfVd5koD1dGRgHp2i818CjSWxeGvCdpZAEUHofDZCG7Ix42YX0XLKxVeRp5Yd12gZAoZD")
 				.setOAuthPermissions("email,publish_stream,read_stream,...");
 		FacebookFactory ff = new FacebookFactory(cb.build());
 		Facebook facebook = ff.getInstance();
@@ -41,6 +31,10 @@ public class App {
 			// facebook.postStatusMessage("Test post status!");
 			// System.out.println("OK");
 			ResponseList<Post> feed = facebook.getHome();
+			
+			for (Post post : feed) {
+				System.out.println("Message: " + post.getMessage());
+			}
 
 			// Post p = feed.get(0);
 			// System.out.println(p.getComments());
@@ -57,7 +51,7 @@ public class App {
 			//Post res = null;
 			
 
-			System.out.println(feed.get(0).toString());
+			//System.out.println(feed.get(0).toString());
 
 		} catch (FacebookException e) {
 			// TODO Auto-generated catch block
