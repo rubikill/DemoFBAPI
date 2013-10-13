@@ -43,8 +43,6 @@ appservice.factory('Feed', function($resource) {
 });
 
 var HomeCtrl = (function($scope, Home, Auth, Feed) {
-	
-	
 	// Load the SDK asynchronously
 	(function(d) {
 		var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
@@ -57,7 +55,7 @@ var HomeCtrl = (function($scope, Home, Auth, Feed) {
 		js.src = "//connect.facebook.net/en_US/all.js";
 		ref.parentNode.insertBefore(js, ref);
 	}(document));
-	
+
 	// Here we run a very simple test of the Graph API after login is
 	// successful.
 	// This testAPI() function is only called in those cases.
@@ -74,15 +72,19 @@ var HomeCtrl = (function($scope, Home, Auth, Feed) {
 				// app, and response.authResponse supplies
 				// the user's ID, a valid access token, a signed
 				// request, and the time the access token
-				// and signed request each expire								
+				// and signed request each expire
+
+				
+				
+				$scope.token = response.authResponse.accessToken;
 				Auth.setToken({
 					token : response.authResponse.accessToken
 				}, function(data) {
-					console.log("success");
+					console.log("success: " + response.authResponse.accessToken);
 				}, function(response) {
 					console.log("fail");
 				});
-				
+
 			} else if (response.status === 'not_authorized') {
 				// the user is logged in to Facebook,
 				// but has not authenticated your app
@@ -96,12 +98,12 @@ var HomeCtrl = (function($scope, Home, Auth, Feed) {
 
 	window.fbAsyncInit = function() {
 		FB.init({
-			appId : '380947045341754', // App ID
+			appId : '163257810547958', // App ID
 			channelUrl : 'https://localhost:9000/index.html', // Channel File
 			status : true, // check login status
-			cookie : true, // enable cookies to allow the server to access the
-			// session
-			xfbml : true
+			xfbml : true,
+			
+			
 		// parse XFBML
 		});
 
@@ -112,6 +114,7 @@ var HomeCtrl = (function($scope, Home, Auth, Feed) {
 		// whenever someone who was previously logged out tries to log in again,
 		// the correct case below
 		// will be handled.
+		var scope = "email,publish_stream,read_stream,user_status,user_likes,publish_actions";
 		FB.Event.subscribe('auth.authResponseChange', function(response) {
 			// Here we specify what we do with the response anytime this event
 			// occurs.
@@ -121,7 +124,9 @@ var HomeCtrl = (function($scope, Home, Auth, Feed) {
 				// login status of the person. In this case, we're handling the
 				// situation where they
 				// have logged in to the app.
+				console.log("connected");
 				testAPI();
+
 			} else if (response.status === 'not_authorized') {
 				// In this case, the person is logged into Facebook, but not
 				// into the app, so we call
@@ -135,7 +140,17 @@ var HomeCtrl = (function($scope, Home, Auth, Feed) {
 				// (such as a mouse click)
 				// (2) it is a bad experience to be continually prompted to
 				// login upon page load.
-				FB.login();
+				console.log("Login 1");
+				
+				 FB.login(function(response) {
+					   // handle the response
+					 if (!response || response.error) {
+						    alert('Error occured');
+						  } else {
+						    alert('OK');
+						  }
+					 }, {scope: 'email,user_likes,publish_actions'});
+				 
 			} else {
 				// In this case, the person is not logged into Facebook, so we
 				// call the login()
@@ -145,13 +160,32 @@ var HomeCtrl = (function($scope, Home, Auth, Feed) {
 				// they'll see the Login
 				// dialog right after they log in to Facebook.
 				// The same caveats as above apply to the FB.login() call here.
-				FB.login();
+				console.log("Login 2");
+				 FB.login("publish_stream",scope,function(response) {
+					 if (!response || response.error) {
+						    alert('Error occured');
+						  } else {
+						    alert('OK');
+						  }
+					 });
+				
+				 FB.login(function(response) {
+					   // handle the response
+					 if (!response || response.error) {
+						    alert('Error occured');
+						  } else {
+						    alert('OK');
+						  }
+					 }, {scope: 'email,user_likes,publish_actions'});
 			}
 		});
 	};
-	
+
 	$scope.postStatus = function() {
 		console.log("-----click------");
+		console.log($scope.token);
+		
+		//https:://graph.facebook.com/oauth/authorize?client_id=' . FB_APP_ID . '&redirect_uri=' . REDIRECT_URI . '&scope=publish_stream'
 		Home.postStatus({
 			content : $scope.content
 		}, function(data) {
@@ -178,6 +212,3 @@ var HomeCtrl = (function($scope, Home, Auth, Feed) {
 		});
 	}
 });
-
-
-

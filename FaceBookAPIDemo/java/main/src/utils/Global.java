@@ -2,6 +2,6 @@ package utils;
 
 public class Global {
 	public static String OAuthAccessToken = "";
-	public static String OAuthAppId = "380947045341754";
-	public static String OAuthAppSecret = "254eb1b852604f862034e642746b4e6a";
+	public static String OAuthAppId = "163257810547958";
+	public static String OAuthAppSecret = "17588d6f705be66d58d29a73e3308515";
 }
