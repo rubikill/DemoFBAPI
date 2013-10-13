@@ -8,6 +8,7 @@ GET     /                           controllers.Application.index()
 GET    /status                      controllers.Application.getStatus()
 POST   /status/:content             controllers.Application.postStatus(content: String)
 
+GET    /feeds                       controllers.Application.getFeed()
 
 POST   /auth/:token                 controllers.Application.setToken(token: String)
 

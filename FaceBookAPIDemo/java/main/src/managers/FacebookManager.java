@@ -1,10 +1,14 @@
 package managers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import utils.Global;
 import facebook4j.Facebook;
 import facebook4j.FacebookException;
 import facebook4j.FacebookFactory;
 import facebook4j.Post;
+import facebook4j.Reading;
 import facebook4j.ResponseList;
 import facebook4j.conf.ConfigurationBuilder;
 
@@ -41,18 +45,35 @@ public class FacebookManager {
 	}
 
 	public ResponseList<Post> getFeeds() {
-		ResponseList<Post> feed = null;
-
 		if (Global.OAuthAccessToken != null) {
 			try {
-				feed = facebook.getHome();
-				// System.out.println(feed.get(0).toString());
+				return facebook.getStatuses();
 			} catch (FacebookException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 
-		return feed;
+		return null;
+	}
+	
+	public List<String> getStatus() {
+		if (Global.OAuthAccessToken != null) {
+			try {
+				ResponseList<Post> list = facebook.getStatuses((new Reading().limit(5)));
+				List<String> res = new ArrayList<String>();
+				for (Post post : list) {
+					res.add(post.getMessage());
+//					System.out.println(post.getCaption());
+//					System.out.println(post.getMessage());
+//					System.out.println(post.getLikes());
+				} 
+				
+				return res;
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+		return null;
 	}
 }

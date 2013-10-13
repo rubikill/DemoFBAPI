@@ -11,9 +11,8 @@ app.config([ '$routeProvider', function($routeProvider, $rootScope) {
 var appservice = angular.module('app.services', [ 'ngResource' ]);
 
 appservice.factory('Home', function($resource) {
-	return $resource('/status/:content:token', {
-		content : "@content",
-		token : "@token"
+	return $resource('/status/:content', {
+		content : "@content"
 	}, {
 		getStatus : {
 			method : 'GET'
@@ -34,7 +33,16 @@ appservice.factory('Auth', function($resource) {
 	});
 });
 
-var HomeCtrl = (function($scope, Home, Auth) {
+appservice.factory('Feed', function($resource) {
+	return $resource('/feeds', {
+	}, {
+		getFeeds : {
+			method : 'GET'
+		}
+	});
+});
+
+var HomeCtrl = (function($scope, Home, Auth, Feed) {
 	
 	
 	// Load the SDK asynchronously
@@ -152,6 +160,21 @@ var HomeCtrl = (function($scope, Home, Auth) {
 			console.log("error");
 			// alertify.error(localize.getLocalizedStringWithParams("_EditTaskFail_",
 			// [response.data]));
+		});
+	}
+	
+	$scope.status = [];
+	$scope.getfeeds = function() {
+		console.log("------feed button click-------");
+		
+		Feed.getFeeds({
+			
+		}, function(data) {
+			$scope.status = data;
+			
+			console.log($scope.status);
+		}, function(response) {
+			console.log("error");
 		});
 	}
 });
