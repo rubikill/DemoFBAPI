@@ -11,13 +11,11 @@
 <body ng-app="app">
 	<div id="fb-root"></div>
 	<div class="container-narrow" ng-controller="HomeCtrl">
-		<fb:login-button scope="email,user_likes,publish_actions" show-faces="true" width="200" max-rows="1"></fb:login-button>
 
 		<div class="masthead">
 			<ul class="nav nav-pills pull-right">
-				<li class="active"><a href="#">Home</a></li>
-				<li><a href="#">About</a></li>
-				<li><a href="#">Contact</a></li>
+				<fb:login-button scope="email,user_likes,publish_actions"
+					show-faces="true" width="200" max-rows="1"></fb:login-button>
 			</ul>
 			<h3 class="muted">Demo Facebook API</h3>
 		</div>
@@ -28,12 +26,26 @@
 			<textarea rows="5" ng-model="content"></textarea>
 
 			<button class="btn btn-large btn-success" ng-click="postStatus()">Post
-				to your Facebook wall</button>
+				to Facebook wall</button>
 			<button class="btn btn-large btn-success" ng-click="getfeeds()">Get
 				new feeds</button>
+
+
 		</div>
 
 		<hr>
+
+		<div ng-repeat="item in listFeed">
+			<span>{{item.name}}</span><br>
+			<span>{{item.type}}</span>
+			<p>{{item.message}}</p>
+
+			<!-- <img src="{{item.url}}" class="img-rounded"> -->
+
+			<iframe width="100%" height="100%" frameborder="0" scrolling="no"
+				allowtransparency="true" src="{{item.url}}"></iframe>
+			<hr>
+		</div>
 
 		<div class="footer">
 			<p>© Ha Thanh Toan 2013</p>

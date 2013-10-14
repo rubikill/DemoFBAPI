@@ -45,8 +45,20 @@ public class FacebookManager {
 
 	public ResponseList<Post> getFeeds() {
 		if (Global.OAuthAccessToken != null) {
+			//System.out.println("--------------------get feed---------");
 			try {
-				return facebook.getStatuses();
+				ResponseList<Post> list = facebook.getHome(new Reading().limit(5));
+//				System.out.println("--------------------1---------");
+//				System.out.println(list.size());
+//				//List<String> res = new ArrayList<String>();
+//				for (Post post : list) {
+//					//res.add(post.getMessage());
+//					System.out.println(post.getCaption());
+//					System.out.println(post.getMessage());
+//					System.out.println(post.getLikes());
+//				} 
+				
+				return list;
 			} catch (FacebookException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -59,13 +71,13 @@ public class FacebookManager {
 	public List<String> getStatus() {
 		if (Global.OAuthAccessToken != null) {
 			try {
-				ResponseList<Post> list = facebook.getStatuses((new Reading().limit(5)));
+				ResponseList<Post> list = facebook.getStatuses((new Reading().limit(3)));
 				List<String> res = new ArrayList<String>();
 				for (Post post : list) {
 					res.add(post.getMessage());
-//					System.out.println(post.getCaption());
-//					System.out.println(post.getMessage());
-//					System.out.println(post.getLikes());
+					System.out.println(post.getCaption());
+					System.out.println(post.getMessage());
+					System.out.println(post.getLikes());
 				} 
 				
 				return res;

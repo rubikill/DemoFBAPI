@@ -34,10 +34,10 @@ appservice.factory('Auth', function($resource) {
 });
 
 appservice.factory('Feed', function($resource) {
-	return $resource('/feeds', {
-	}, {
+	return $resource('/feeds', {}, {
 		getFeeds : {
-			method : 'GET'
+			method : 'GET',
+			isArray : true
 		}
 	});
 });
@@ -74,13 +74,13 @@ var HomeCtrl = (function($scope, Home, Auth, Feed) {
 				// request, and the time the access token
 				// and signed request each expire
 
-				
-				
 				$scope.token = response.authResponse.accessToken;
 				Auth.setToken({
 					token : response.authResponse.accessToken
 				}, function(data) {
-					console.log("success: " + response.authResponse.accessToken);
+					console
+							.log("success: "
+									+ response.authResponse.accessToken);
 				}, function(response) {
 					console.log("fail");
 				});
@@ -98,12 +98,11 @@ var HomeCtrl = (function($scope, Home, Auth, Feed) {
 
 	window.fbAsyncInit = function() {
 		FB.init({
-			appId : '163257810547958', // App ID
+			appId : '380947045341754', // App ID
 			channelUrl : 'https://localhost:9000/index.html', // Channel File
 			status : true, // check login status
 			xfbml : true,
-			
-			
+
 		// parse XFBML
 		});
 
@@ -141,16 +140,18 @@ var HomeCtrl = (function($scope, Home, Auth, Feed) {
 				// (2) it is a bad experience to be continually prompted to
 				// login upon page load.
 				console.log("Login 1");
-				
-				 FB.login(function(response) {
-					   // handle the response
-					 if (!response || response.error) {
-						    alert('Error occured');
-						  } else {
-						    alert('OK');
-						  }
-					 }, {scope: 'email,user_likes,publish_actions'});
-				 
+
+				FB.login(function(response) {
+					// handle the response
+					if (!response || response.error) {
+						alert('Error occured');
+					} else {
+						alert('OK');
+					}
+				}, {
+					scope : 'email,user_likes,publish_actions'
+				});
+
 			} else {
 				// In this case, the person is not logged into Facebook, so we
 				// call the login()
@@ -161,22 +162,24 @@ var HomeCtrl = (function($scope, Home, Auth, Feed) {
 				// dialog right after they log in to Facebook.
 				// The same caveats as above apply to the FB.login() call here.
 				console.log("Login 2");
-				 FB.login("publish_stream",scope,function(response) {
-					 if (!response || response.error) {
-						    alert('Error occured');
-						  } else {
-						    alert('OK');
-						  }
-					 });
-				
-				 FB.login(function(response) {
-					   // handle the response
-					 if (!response || response.error) {
-						    alert('Error occured');
-						  } else {
-						    alert('OK');
-						  }
-					 }, {scope: 'email,user_likes,publish_actions'});
+				FB.login("publish_stream", scope, function(response) {
+					if (!response || response.error) {
+						alert('Error occured');
+					} else {
+						alert('OK');
+					}
+				});
+
+				FB.login(function(response) {
+					// handle the response
+					if (!response || response.error) {
+						alert('Error occured');
+					} else {
+						alert('OK');
+					}
+				}, {
+					scope : 'email,user_likes,publish_actions'
+				});
 			}
 		});
 	};
@@ -184,8 +187,9 @@ var HomeCtrl = (function($scope, Home, Auth, Feed) {
 	$scope.postStatus = function() {
 		console.log("-----click------");
 		console.log($scope.token);
-		
-		//https:://graph.facebook.com/oauth/authorize?client_id=' . FB_APP_ID . '&redirect_uri=' . REDIRECT_URI . '&scope=publish_stream'
+
+		// https:://graph.facebook.com/oauth/authorize?client_id=' . FB_APP_ID .
+		// '&redirect_uri=' . REDIRECT_URI . '&scope=publish_stream'
 		Home.postStatus({
 			content : $scope.content
 		}, function(data) {
@@ -196,17 +200,20 @@ var HomeCtrl = (function($scope, Home, Auth, Feed) {
 			// [response.data]));
 		});
 	}
-	
-	$scope.status = [];
+
+	$scope.listFeed = [];
 	$scope.getfeeds = function() {
 		console.log("------feed button click-------");
-		
+
 		Feed.getFeeds({
-			
+
 		}, function(data) {
-			$scope.status = data;
-			
-			console.log($scope.status);
+			$scope.listFeed = [];
+			for ( var i = 0; i < data.length; i++) {
+				$scope.listFeed.push(data[i]);
+			}
+
+			console.log(angular.fromJson(data));
 		}, function(response) {
 			console.log("error");
 		});

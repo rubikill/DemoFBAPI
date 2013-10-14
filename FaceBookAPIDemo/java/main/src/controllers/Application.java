@@ -1,11 +1,14 @@
 package controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import managers.FacebookManager;
+import models.Status;
 
 import org.codehaus.jackson.JsonNode;
 
+import facebook4j.Comment;
 import facebook4j.Post;
 
 import play.mvc.Controller;
@@ -20,15 +23,20 @@ public class Application extends Controller {
     }
     
     public static Result getFeed(){
-    	//JsonNode json = request().body().asJson();
-    	//System.out.println(json);
-    	//System.out.println();
     	
-    	//(new FacebookManager()).getFeeds().get(0).getMessage()
+    	List<models.Status> s = new ArrayList<models.Status>();
     	
-    	//List<>
+    	for (Post post : (new FacebookManager()).getFeeds()) {
+    		models.Status temp = new models.Status();
+    		temp.message = post.getMessage();
+    		temp.type = post.getType();
+    		temp.url = post.getPicture();
+    		temp.name = post.getFrom().getName();
+    		
+    		s.add(temp);
+		}
     	
-    	return ok((new FacebookManager()).getStatus().toString());
+    	return ok(Tools.listToJson(s));
     }
     
     public static Result getStatus(){
