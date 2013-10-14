@@ -8,7 +8,8 @@ app.config([ '$routeProvider', function($routeProvider, $rootScope) {
 	});
 } ]);
 
-var appservice = angular.module('app.services', [ 'ngResource' ]);
+var appservice = angular.module('app.services', [ 'ngResource',
+		'angularFileUpload' ]);
 
 appservice.factory('Home', function($resource) {
 	return $resource('/status/:content', {
@@ -18,6 +19,16 @@ appservice.factory('Home', function($resource) {
 			method : 'GET'
 		},
 		postStatus : {
+			method : 'POST'
+		}
+	});
+});
+
+appservice.factory('Photo', function($resource) {
+	return $resource('/photo/:photo', {
+		photo : "@photo"
+	}, {
+		postPhoto : {
 			method : 'POST'
 		}
 	});
@@ -42,7 +53,7 @@ appservice.factory('Feed', function($resource) {
 	});
 });
 
-var HomeCtrl = (function($scope, Home, Auth, Feed) {
+var HomeCtrl = (function($scope, Home, Auth, Feed, Photo, $http) {
 	// Load the SDK asynchronously
 	(function(d) {
 		var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
@@ -201,6 +212,32 @@ var HomeCtrl = (function($scope, Home, Auth, Feed) {
 		});
 	}
 
+	$scope.postPhoto = function() {
+		console.log("-----post photo btn click------");
+		console.log($scope.token);
+
+		for ( var i = 0; i < $scope.files.length; i++) {
+			var $file = $scope.files[i];
+			$http.uploadFile({
+				url : '/photo/:photo', // upload.php script, node.js route,
+				// or servlet upload url)
+				data : {
+					myObj : "Upload file"
+				},
+				file : $file,
+				photo : $scope.content
+			}).then(function(data, status, headers, config) {
+				// file is uploaded successfully
+				console.log(data);
+			}, function(dada) {
+				console.log(data);
+			}, function(response) {
+				console.log(response);
+			});
+		}
+	}
+	
+	$scope.files = [];
 	$scope.listFeed = [];
 	$scope.getfeeds = function() {
 		console.log("------feed button click-------");
@@ -217,5 +254,9 @@ var HomeCtrl = (function($scope, Home, Auth, Feed) {
 		}, function(response) {
 			console.log("error");
 		});
+	}
+
+	$scope.onFileSelect = function($files) {
+		$scope.files = $files;
 	}
 });

@@ -7,6 +7,7 @@ GET     /                           controllers.Application.index()
 
 GET    /status                      controllers.Application.getStatus()
 POST   /status/:content             controllers.Application.postStatus(content: String)
+POST   /photo/:photo                controllers.Application.postPhoto(photo: String)
 
 GET    /feeds                       controllers.Application.getFeed()
 
