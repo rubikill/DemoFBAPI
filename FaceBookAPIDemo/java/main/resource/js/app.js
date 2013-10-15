@@ -218,4 +218,10 @@ var HomeCtrl = (function($scope, Home, Auth, Feed) {
 			console.log("error");
 		});
 	}
+	$scope.file = "";
+	$scope.postPhoto = function() {
+		console.log("------post photo button click-------");
+
+		console.log($scope.file);
+	}
 });

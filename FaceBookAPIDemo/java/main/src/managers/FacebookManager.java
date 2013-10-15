@@ -1,5 +1,6 @@
 package managers;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +8,7 @@ import utils.Global;
 import facebook4j.Facebook;
 import facebook4j.FacebookException;
 import facebook4j.FacebookFactory;
+import facebook4j.Media;
 import facebook4j.Post;
 import facebook4j.Reading;
 import facebook4j.ResponseList;
@@ -42,6 +44,21 @@ public class FacebookManager {
 		}
 		return false;
 	}
+	
+	public boolean postPhoto(String status, String url) {
+		if (Global.OAuthAccessToken != null) {
+			try {
+				//facebook.postStatusMessage(status);
+				facebook.postPhoto(new Media(new File(url)));
+				return true;
+			} catch (FacebookException e) {
+				// TODO Auto-generated catch block
+				System.out.println(e);
+			}
+
+		}
+		return false;
+	}	
 
 	public ResponseList<Post> getFeeds() {
 		if (Global.OAuthAccessToken != null) {
