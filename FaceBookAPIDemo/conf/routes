@@ -30,6 +30,7 @@ GET    /group                       controllers.Application.getGroups()
 GET    /group/:id                   controllers.Application.getGroup(id: String)
 GET    /group/:id/members           controllers.Application.getGroupMember(id: String)
 GET    /group/:id/feeds             controllers.Application.getGroupFeed(id: String)
+GET    /group/:id/statistic         controllers.Application.getGroupStatistic(id: String)
 GET    /group/:id/cover             controllers.Application.getGroupPictureURL(id: String)
 
 # Map static resources from the /public folder to the /assets URL path

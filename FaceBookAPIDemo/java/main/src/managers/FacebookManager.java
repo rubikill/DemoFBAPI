@@ -4,6 +4,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joda.time.DateTime;
+
 import utils.Global;
 import facebook4j.Admin;
 import facebook4j.Album;
@@ -32,12 +34,12 @@ public class FacebookManager {
 				.setOAuthAppSecret(Global.OAuthAppSecret)
 				.setOAuthAccessToken(Global.OAuthAccessToken)
 				.setOAuthPermissions(
-						"email,user_notes,user_status,publish_actions,user_groups,user_likes," +
-						"user_photos,user_about_me,user_birthday,user_friends,user_hometown," +
-						"user_location,user_videos,create_note,manage_friendlists,photo_upload," +
-						"read_requests,share_item,export_stream,manage_notifications," +
-						"publish_stream,read_mailbox,read_stream,video_upload,manage_pages," +
-						"read_friendlists,read_page_mailboxes,status_update,page,...");
+						"email,user_notes,user_status,publish_actions,user_groups,user_likes,"
+								+ "user_photos,user_about_me,user_birthday,user_friends,user_hometown,"
+								+ "user_location,user_videos,create_note,manage_friendlists,photo_upload,"
+								+ "read_requests,share_item,export_stream,manage_notifications,"
+								+ "publish_stream,read_mailbox,read_stream,video_upload,manage_pages,"
+								+ "read_friendlists,read_page_mailboxes,status_update,page,...");
 
 		FacebookFactory ff = new FacebookFactory(cb.build());
 		facebook = ff.getInstance();
@@ -46,7 +48,7 @@ public class FacebookManager {
 
 	/*************************************************************
 	 * 
-	 * 							Status
+	 * Status
 	 * 
 	 *************************************************************/
 	public boolean postStatus(String status) {
@@ -80,7 +82,7 @@ public class FacebookManager {
 
 	/*************************************************************
 	 * 
-	 * 							Feed
+	 * Feed
 	 * 
 	 *************************************************************/
 	public ResponseList<Post> getFeeds() {
@@ -96,13 +98,13 @@ public class FacebookManager {
 
 		return null;
 	}
-	
+
 	/*************************************************************
 	 * 
-	 * 							Album
+	 * Album
 	 * 
 	 *************************************************************/
-	public Photo getPhoto(String id){
+	public Photo getPhoto(String id) {
 		if (Global.OAuthAccessToken != null) {
 			try {
 				return facebook.getPhoto(id);
@@ -113,14 +115,13 @@ public class FacebookManager {
 		}
 		return null;
 	}
-	
-	public List<Photo> getPhotos(String id){
+
+	public List<Photo> getPhotos(String id) {
 		if (Global.OAuthAccessToken != null) {
 			try {
 				System.out.println(facebook.getAlbumPhotos(id).size());
 				return facebook.getAlbumPhotos(id);
-				
-				
+
 			} catch (FacebookException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -132,7 +133,8 @@ public class FacebookManager {
 	public ResponseList<Album> getAlbums() {
 		if (Global.OAuthAccessToken != null) {
 			try {
-				ResponseList<Album> res = facebook.getAlbums((new Reading()).limit(5));
+				ResponseList<Album> res = facebook.getAlbums((new Reading())
+						.limit(5));
 				return res;
 			} catch (FacebookException e) {
 				// TODO Auto-generated catch block
@@ -145,7 +147,7 @@ public class FacebookManager {
 
 	/*************************************************************
 	 * 
-	 * 							Status
+	 * Status
 	 * 
 	 *************************************************************/
 	public List<String> getStatus() {
@@ -171,7 +173,7 @@ public class FacebookManager {
 
 	/*************************************************************
 	 * 
-	 * 							Like/unlike
+	 * Like/unlike
 	 * 
 	 *************************************************************/
 	public void like(String id) {
@@ -209,7 +211,7 @@ public class FacebookManager {
 
 	/*************************************************************
 	 * 
-	 * 							Page
+	 * Page
 	 * 
 	 *************************************************************/
 	public ResponseList<Admin> getPages() {
@@ -227,17 +229,40 @@ public class FacebookManager {
 		return null;
 	}
 
+	public User getInfo(String userId) {
+		if (Global.OAuthAccessToken != null) {
+			try {
+
+				return facebook.getUser(userId);
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+		return null;
+	}
+
+	public URL getAva(String userId) {
+		if (Global.OAuthAccessToken != null) {
+			try {
+				return facebook.getPictureURL(userId);
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+		return null;
+	}
+
 	/*************************************************************
 	 * 
-	 * 							Group
+	 * Group
 	 * 
 	 *************************************************************/
 	public ResponseList<Group> getGroups() {
 		// TODO Auto-generated method stub
 		if (Global.OAuthAccessToken != null) {
 			try {
-				System.out.println(facebook.getPermissions());
-				
+				// System.out.println(facebook.getPermissions());
+
 				return facebook.getGroups();
 			} catch (Exception e) {
 				// TODO: handle exception
@@ -245,12 +270,12 @@ public class FacebookManager {
 		}
 		return null;
 	}
-	
+
 	public Group getGroup(String id) {
 		// TODO Auto-generated method stub
 		if (Global.OAuthAccessToken != null) {
 			try {
-				
+
 				return facebook.getGroup(id);
 			} catch (Exception e) {
 				// TODO: handle exception
@@ -258,19 +283,21 @@ public class FacebookManager {
 		}
 		return null;
 	}
-	
+
 	public ResponseList<Post> getGroupFeed(String groupId) {
 		// TODO Auto-generated method stub
 		if (Global.OAuthAccessToken != null) {
 			try {
-				return facebook.getGroupFeed(groupId);
+				DateTime d = new DateTime(2013, 9, 11, 0, 0);
+				return facebook.getGroupFeed(groupId,
+						new Reading().after("" + d.getMillis()).limit(300));
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
 		}
 		return null;
 	}
-	
+
 	public ResponseList<GroupMember> getGroupMembers(String groupId) {
 		// TODO Auto-generated method stub
 		if (Global.OAuthAccessToken != null) {
@@ -282,7 +309,7 @@ public class FacebookManager {
 		}
 		return null;
 	}
-	
+
 	public URL getGroupPictureURL(String groupId) {
 		// TODO Auto-generated method stub
 		if (Global.OAuthAccessToken != null) {

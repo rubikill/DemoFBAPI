@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Home</title>
-<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1.0'>
-<link href='css/bootstrap.min.css' rel='stylesheet' media='screen'>
-<link href='css/home.css' rel='stylesheet' media='screen'>
-
+	<title>Home</title>
+	<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
+	<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+	<link href='css/bootstrap.min.css' rel='stylesheet' media='screen'>
+	<link href='css/home.css' rel='stylesheet' media='screen'>
 </head>
 <body ng-app="app">
 	<div id="fb-root"></div>
@@ -15,110 +14,46 @@
 		<div class="masthead">
 			<ul class="nav nav-pills pull-right">
 				<fb:login-button scope="email,user_likes,publish_actions"
-					show-faces="true" width="200" max-rows="1"></fb:login-button>
+				show-faces="true" width="200" max-rows="1"></fb:login-button>
 			</ul>
 			<h3 class="muted">Demo Facebook API</h3>
 		</div>
 
-		<hr>
-		<div class="jumbotron">
-
-			<textarea rows="5" ng-model="content"></textarea>
-
-			<button class="btn btn-large btn-success" ng-click="postStatus()">Post
-				to Facebook wall</button>
-			<button class="btn btn-large btn-success" ng-click="getfeeds()">Get
-				new feeds</button>
-
-
-		</div>
-
-		<hr>
 		<div>
-			<input type="file" ng-file-select="onFileSelect($files)">
-			<button class="btn btn-large btn-success" ng-click="postPhoto()">Post
-				photo</button>
+			<button class="btn btn-large btn-success" ng-click="getGroups()">Get Groups</button>
 		</div>
 		<hr>
 
-		<div>
 
-			<button class="btn btn-large btn-success" ng-click="getAlbums()">Get
-				Albums</button>
-			<button class="btn btn-large btn-success" ng-click="getPages()">Get
-				Pages</button>
-			<button class="btn btn-large btn-success" ng-click="getGroups()">Get
-				Groups</button>
-		</div>
-		
-		<div ng-repeat="item in listGroups">
-			<span>{{item.name}}</span><br>
-
-			<button class="btn btn-large btn-success"
-				ng-click="getGroup(item.id)">Get group</button>
-			<br>
-			<button class="btn btn-large btn-success"
-				ng-click="getGroupMembers(item.id)">Get group members</button>
-			<br>
-			<button class="btn btn-large btn-success"
-				ng-click="getGroupFeeds(item.id)">Get group feeds</button>
-			<br>
-			<button class="btn btn-large btn-success"
-				ng-click="getGroupCover(item.id)">Get group Cover</button>
-			<br>
-		</div>
-
-		<div ng-repeat="item in listAlbum">
-			<span>{{item.name}}</span><br>
-
-			<button class="btn btn-large btn-success"
-				ng-click="getAlbum(item.id)">View photos</button>
-			<br>
-			<!-- <img src="{{getPhoto(item.coverPhoto)}}"></img> -->
-			<a href="{{item.link}}">See more...</a>
-			<hr>
-
-		</div>
-
-		<div ng-repeat="item in listPhotos">
-			<img src="{{item.source}}"></img>
-			<hr>
-			<div ng-repeat="comment in item.comments">
-				<span>{{comment.from.name}} : </span> <span>{{comment.message}}
-					: </span><br>
+			<div class="row-fluid">
+				<div class="span6">
+					<div ng-repeat="item in listGroups">
+						<span>{{item.name}}</span><br>
+						<button class="btn btn-success"
+						ng-click="getGroupStatistic(item.id)">Get group statistics</button>
+						<br>
+					</div>
+				</div>
+				<div class="span6">
+					<div ng-repeat="item in listStatistic">
+						<img src="{{item.avatar}}"></img>
+						<a href="{{item.user.link}}">{{item.user.name}}</a>
+						<span>    Số lượt đăng bài: {{item.count}}</span>
+						<hr>
+					</div>
+				</div>
+			</div>
+			<div class="footer">
+				<p>© Ha Thanh Toan 2013</p>
 			</div>
 		</div>
 
-
-		<hr>
-
-		<div ng-repeat="item in listFeed">
-			<span>{{item.id}}</span><br> <span>{{item.name}}</span><br>
-			<span>{{item.type}}</span>
-			<p>{{item.message}}</p>
-
-			<!-- <img src="{{item.url}}" class="img-rounded"> -->
-
-			<iframe width="100%" height="100%" frameborder="0" scrolling="no"
-				allowtransparency="true" src="{{item.url}}"></iframe>
-			<button class="btn btn-primary" ng-click="like(item.id)"
-				ng-show="!checkLike(item.likes)">Like</button>
-			<button class="btn btn-primary" ng-click="unLike(item.id)"
-				ng-show="checkLike(item.likes)">DisLike</button>
-			<hr>
-		</div>
-
-		<div class="footer">
-			<p>© Ha Thanh Toan 2013</p>
-		</div>
-	</div>
-
-	<script src='js/lib/jquery-1.9.0.min.js' type='text/javascript'></script>
-	<script src='js/lib/jquery-ui.min.js' type='text/javascript'></script>
-	<script src='js/lib/angular.min.js' type='text/javascript'></script>
-	<script src='js/lib/angular-resource.min.js' type='text/javascript'></script>
-	<script src='js/app.js' type='text/javascript'></script>
-	<script src='js/facebook.js' type='text/javascript'></script>
-	<script src="js/lib/angular-file-upload.js" type='text/javascript'></script>
-</body>
-</html>
+		<script src='js/lib/jquery-1.9.0.min.js' type='text/javascript'></script>
+		<script src='js/lib/jquery-ui.min.js' type='text/javascript'></script>
+		<script src='js/lib/angular.min.js' type='text/javascript'></script>
+		<script src='js/lib/angular-resource.min.js' type='text/javascript'></script>
+		<script src='js/app.js' type='text/javascript'></script>
+		<script src='js/facebook.js' type='text/javascript'></script>
+		<script src="js/lib/angular-file-upload.js" type='text/javascript'></script>
+	</body>
+	</html>

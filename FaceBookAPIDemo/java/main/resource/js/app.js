@@ -136,6 +136,13 @@ appservice.factory('Group', function($resource) {
 			params : {
 				action : "cover"
 			}
+		},
+		getStatistic : {
+			method : 'GET',
+			isArray : true,
+			params : {
+				action : "statistic"
+			}
 		}
 	});
 });
@@ -492,11 +499,25 @@ var HomeCtrl = (function($scope, Home, Auth, Feed, Photo, Album, $http, User,
 		});
 	}
 
+	
 	$scope.getGroupFeeds = function(id) {
 		Group.getGroupFeeds({
 			id : id
 		}, function(data) {
 			console.log(angular.fromJson(data));
+			console.log("success");
+		}, function(response) {
+			console.log("error");
+		});
+	}
+
+	$scope.listStatistic = [];
+	$scope.getGroupStatistic = function(id) {
+		Group.getStatistic({
+			id : id
+		}, function(data) {
+			//console.log(angular.fromJson(data));
+			$scope.listStatistic = data;			
 			console.log("success");
 		}, function(response) {
 			console.log("error");

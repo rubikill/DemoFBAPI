@@ -2,12 +2,18 @@ package controllers;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import managers.FacebookManager;
+import models.StatisticInfo;
 import play.mvc.Controller;
 import play.mvc.Http.MultipartFormData.FilePart;
 import play.mvc.Result;
+import utils.Compare;
 import utils.Global;
 import utils.Tools;
 import facebook4j.Admin;
@@ -25,15 +31,16 @@ public class Application extends Controller {
 	public static Result index() {
 		return ok("Hello");
 	}
+
 	/*************************************************************
 	 * 
-	 * 							Feed
+	 * Feed
 	 * 
 	 *************************************************************/
 	public static Result getFeed() {
 
 		FacebookManager facebookManager = new FacebookManager();
-		
+
 		System.out.println(facebookManager.toString());
 		List<models.Status> s = new ArrayList<models.Status>();
 
@@ -45,9 +52,9 @@ public class Application extends Controller {
 			temp.name = post.getFrom().getName();
 			temp.id = post.getId();
 			temp.comments = post.getComments();
-			
+
 			temp.likes = post.getLikes();
-			
+
 			s.add(temp);
 		}
 
@@ -57,10 +64,10 @@ public class Application extends Controller {
 	public static Result getStatus() {
 		return ok();
 	}
-	
+
 	/*************************************************************
 	 * 
-	 * 							Album
+	 * Album
 	 * 
 	 *************************************************************/
 	/**
@@ -70,11 +77,11 @@ public class Application extends Controller {
 	public static Result getAlbums() {
 		System.out.println("get album called");
 		FacebookManager facebookManager = new FacebookManager();
-		List<Album> list =  facebookManager.getAlbums();
+		List<Album> list = facebookManager.getAlbums();
 		System.out.println(list.size());
 		return ok(Tools.listToJson(list));
 	}
-	
+
 	public static Result getAlbum(String id) {
 		System.out.println("-------single album--------");
 		FacebookManager facebookManager = new FacebookManager();
@@ -82,10 +89,9 @@ public class Application extends Controller {
 		return ok(Tools.listToJson(photos));
 	}
 
-	
 	/*************************************************************
 	 * 
-	 * 							Status
+	 * Status
 	 * 
 	 *************************************************************/
 	public static Result postStatus(String s) {
@@ -114,10 +120,10 @@ public class Application extends Controller {
 		System.out.println("OK");
 		return ok("OK men!");
 	}
-	
+
 	public static Result getPhoto(String id) {
 		FacebookManager facebookManager = new FacebookManager();
-		
+
 		facebookManager.getPhoto(id);
 		return ok();
 	}
@@ -126,86 +132,85 @@ public class Application extends Controller {
 		Global.OAuthAccessToken = token;
 		return ok();
 	}
-	
+
 	/*************************************************************
 	 * 
-	 * 							Like
+	 * Like
 	 * 
 	 *************************************************************/
-	public static Result like(String id){
+	public static Result like(String id) {
 		System.out.println("Like is called");
 		(new FacebookManager()).like(id);
 		return ok("");
 	}
-	
-	public static Result unLike(String id){
+
+	public static Result unLike(String id) {
 		System.out.println("Unlike is called");
 		(new FacebookManager()).unLike(id);
 		return ok("");
 	}
-	
+
 	/*************************************************************
 	 * 
-	 * 							User
+	 * User
 	 * 
 	 *************************************************************/
-	public static Result getUser(String id){
+	public static Result getUser(String id) {
 		System.out.println(id);
 		User u = (new FacebookManager()).getUser(id);
-		
+
 		System.out.println(u.toString());
 		return ok(Tools.toJson(u));
 	}
-	
-	
+
 	/*************************************************************
 	 * 
-	 * 							Page
+	 * Page
 	 * 
 	 *************************************************************/
-	public static Result getPages(){
+	public static Result getPages() {
 		FacebookManager facebookManager = new FacebookManager();
 		List<Admin> list = facebookManager.getPages();
 		if (list == null) {
 			return badRequest("NULL");
-		}		
+		}
 		return ok(Tools.listToJson(list));
 	}
-	
+
 	/*************************************************************
 	 * 
-	 * 							Page
+	 * Page
 	 * 
 	 *************************************************************/
-	public static Result getGroups(){
+	public static Result getGroups() {
 		FacebookManager facebookManager = new FacebookManager();
 		List<Group> list = facebookManager.getGroups();
-				
+
 		return ok(Tools.listToJson(list));
 	}
-	
-	public static Result getGroup(String id){
+
+	public static Result getGroup(String id) {
 		FacebookManager facebookManager = new FacebookManager();
 		Group group = facebookManager.getGroup(id);
-		
+
 		System.out.println(group.getOwner());
 		System.out.println(group.getVersion());
 		System.out.println(group.getVenue());
 		System.out.println(group.getDescription());
-				
+
 		return ok(Tools.toJson(group));
 	}
-	
-	public static Result getGroupMember(String id){
+
+	public static Result getGroupMember(String id) {
 		FacebookManager facebookManager = new FacebookManager();
-		ResponseList<GroupMember> members = facebookManager.getGroupMembers(id);			
+		ResponseList<GroupMember> members = facebookManager.getGroupMembers(id);
 		return ok(Tools.listToJson(members));
 	}
-	
-	public static Result getGroupFeed(String id){
+
+	public static Result getGroupFeed(String id) {
 		FacebookManager facebookManager = new FacebookManager();
 		ResponseList<Post> posts = facebookManager.getGroupFeed(id);
-		
+
 		List<models.Status> s = new ArrayList<models.Status>();
 
 		for (Post post : posts) {
@@ -216,27 +221,68 @@ public class Application extends Controller {
 			temp.name = post.getFrom().getName();
 			temp.id = post.getId();
 			temp.comments = post.getComments();
-			
 			temp.likes = post.getLikes();
-			
 			s.add(temp);
 		}
-		
+
 		return ok(Tools.listToJson(s));
 	}
-	
-	public static Result getGroupPictureURL(String id){
+
+	public static Result getGroupStatistic(String id) {
 		FacebookManager facebookManager = new FacebookManager();
-		URL group = facebookManager.getGroupPictureURL(id);			
+		ResponseList<Post> posts = facebookManager.getGroupFeed(id);
+
+		List<StatisticInfo> res = new ArrayList<StatisticInfo>();
+		HashMap<String, Integer> map = new HashMap<String, Integer>();
+
+		for (Post post : posts) {
+			String userId = post.getFrom().getId();
+			if (!map.containsKey(userId)) {
+				map.put(userId, 1);
+			} else {
+				int value = map.get(userId) + 1;
+				map.put(userId, value);
+			}
+		}
+
+		Iterator iter = map.entrySet().iterator();
+
+		while (iter.hasNext()) {
+			Map.Entry mEntry = (Map.Entry) iter.next();
+			StatisticInfo info = new StatisticInfo();
+
+			String uId = mEntry.getKey().toString();
+			info.user = facebookManager.getUser(uId);
+			info.avatar = facebookManager.getAva(uId);
+			info.count = Integer.parseInt(mEntry.getValue().toString());
+			res.add(info);
+		}
+
+		Collections.sort(res, new Compare());
+
+		List<StatisticInfo> res1 = new ArrayList<StatisticInfo>();
+		for (int i = 0; i < res.size(); i++) {
+			if (i == 10) {
+				break;
+			} else {
+				res1.add(res.get(i));
+			}
+		}
+
+		return ok(Tools.listToJson(res1));
+	}
+
+	public static Result getGroupPictureURL(String id) {
+		FacebookManager facebookManager = new FacebookManager();
+		URL group = facebookManager.getGroupPictureURL(id);
 		return ok(Tools.toJson(group));
 	}
-	
-	
-//	public static Result getPage(String id){
-//		System.out.println(id);
-//		Page p = (new FacebookManager()).getPage(id);
-//		
-//		System.out.println(p.toString());
-//		return ok(Tools.toJson(p));
-//	}
+
+	// public static Result getPage(String id){
+	// System.out.println(id);
+	// Page p = (new FacebookManager()).getPage(id);
+	//
+	// System.out.println(p.toString());
+	// return ok(Tools.toJson(p));
+	// }
 }
