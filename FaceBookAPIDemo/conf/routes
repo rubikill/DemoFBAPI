@@ -1,0 +1,36 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                           controllers.Application.index()
+
+GET    /status                      controllers.Application.getStatus()
+
+GET    /album                       controllers.Application.getAlbums()
+GET    /album/:id                  controllers.Application.getAlbum(id: String)
+
+POST   /status/:content             controllers.Application.postStatus(content: String)
+
+GET    /photo/:photo                controllers.Application.getPhoto(photo: String)
+POST   /photo/:photo                controllers.Application.postPhoto(photo: String)
+
+GET    /feeds                       controllers.Application.getFeed()
+POST   /feeds/:id/like              controllers.Application.like(id: String)
+POST   /feeds/:id/unlike            controllers.Application.unLike(id: String)
+
+POST   /auth/:token                 controllers.Application.setToken(token: String)
+
+GET    /user/:id                    controllers.Application.getUser(id: String)
+
+GET    /page                        controllers.Application.getPages()
+#GET    /page/:id                    controllers.Application.getPage(id: String)
+
+GET    /group                       controllers.Application.getGroups()
+GET    /group/:id                   controllers.Application.getGroup(id: String)
+GET    /group/:id/members           controllers.Application.getGroupMember(id: String)
+GET    /group/:id/feeds             controllers.Application.getGroupFeed(id: String)
+GET    /group/:id/cover             controllers.Application.getGroupPictureURL(id: String)
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /*file                      controllers.Assets.at(path="/java/main/resource", file)
