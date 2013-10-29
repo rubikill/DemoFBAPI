@@ -3,35 +3,37 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index()
+GET     /                                      controllers.Application.index()
 
-GET    /status                      controllers.Application.getStatus()
+GET    /status                                 controllers.StatusController.getStatus()
+POST   /status/:content                        controllers.StatusController.postStatus(content: String)
 
-GET    /album                       controllers.Application.getAlbums()
-GET    /album/:id                  controllers.Application.getAlbum(id: String)
+GET    /album                       		   controllers.AlbumController.getAlbums()
+GET    /album/:id                   		   controllers.AlbumController.getAlbum(id: String)
 
-POST   /status/:content             controllers.Application.postStatus(content: String)
+GET    /photo/:photo                		   controllers.PhotoController.getPhoto(photo: String)
+POST   /photo/:photo                		   controllers.PhotoController.postPhoto(photo: String)
 
-GET    /photo/:photo                controllers.Application.getPhoto(photo: String)
-POST   /photo/:photo                controllers.Application.postPhoto(photo: String)
+GET    /feeds                       		   controllers.FeedController.getFeed()
+POST   /feeds/:id/like              		   controllers.LikeController.like(id: String)
+POST   /feeds/:id/unlike            		   controllers.LikeController.unLike(id: String)
 
-GET    /feeds                       controllers.Application.getFeed()
-POST   /feeds/:id/like              controllers.Application.like(id: String)
-POST   /feeds/:id/unlike            controllers.Application.unLike(id: String)
+POST   /auth/:token                            controllers.Application.setToken(token: String)
 
-POST   /auth/:token                 controllers.Application.setToken(token: String)
+GET    /user/:id                               controllers.UserController.getUser(id: String)
 
-GET    /user/:id                    controllers.Application.getUser(id: String)
-
-GET    /page                        controllers.Application.getPages()
+GET    /page                                   controllers.PageController.getPages()
 #GET    /page/:id                    controllers.Application.getPage(id: String)
 
-GET    /group                       controllers.Application.getGroups()
-GET    /group/:id                   controllers.Application.getGroup(id: String)
-GET    /group/:id/members           controllers.Application.getGroupMember(id: String)
-GET    /group/:id/feeds             controllers.Application.getGroupFeed(id: String)
-GET    /group/:id/statistic         controllers.Application.getGroupStatistic(id: String)
-GET    /group/:id/cover             controllers.Application.getGroupPictureURL(id: String)
+GET    /group                                  controllers.GroupController.getGroups()
+GET    /group/:id                              controllers.GroupController.getGroup(id: String)
+GET    /group/:id/members                      controllers.GroupController.getGroupMember(id: String)
+GET    /group/:id/feeds                        controllers.GroupController.getGroupFeed(id: String)
+GET    /group/:id/statistic/post               controllers.GroupController.getTopPost(id: String)
+GET    /group/:id/statistic/comment            controllers.GroupController.getTopComment(id: String)
+GET    /group/:id/statistic/liked              controllers.GroupController.getTopLiked(id: String)
+GET    /group/:id/statistic/spam               controllers.GroupController.getTopSpam(id: String)
+GET    /group/:id/cover                        controllers.GroupController.getGroupPictureURL(id: String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /*file                      controllers.Assets.at(path="/java/main/resource", file)
