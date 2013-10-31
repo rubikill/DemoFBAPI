@@ -1,5 +1,17 @@
 'use strict';
 
+angular.module('scroll', []).directive('whenScrolled', function() {
+    return function(scope, elm, attr) {
+        var raw = elm[0];
+        
+        elm.bind('scroll', function() {
+            if (raw.scrollTop + raw.offsetHeight >= raw.scrollHeight) {
+                scope.$apply(attr.whenScrolled);
+            }
+        });
+    };
+});
+
 var appservice = angular.module('app.services', [ 'ngResource',
 		'angularFileUpload' , 'ui.bootstrap']);
 
@@ -108,10 +120,11 @@ appservice.factory('Page', function($resource) {
 });
 
 appservice.factory('Group', function($resource) {
-	return $resource('/group/:id/:action/:by', {
+	return $resource('/group/:id/:action/:by/:par', {
 		id : "@id",
 		action : "@action",
-		by : "@by"
+		by : "@by",
+		par : "@par"
 	}, {
 		getGroups : {
 			method : 'GET',
@@ -132,6 +145,14 @@ appservice.factory('Group', function($resource) {
 			isArray : true,
 			params : {
 				action : "feeds"
+			}
+		},
+		getGroupFeedsBefore : {
+			method : 'GET',
+			isArray : true,
+			params : {
+				action : "feeds",
+				by : "before"
 			}
 		},
 		getGroupCover : {

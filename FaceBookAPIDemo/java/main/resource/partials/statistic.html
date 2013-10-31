@@ -1,0 +1,47 @@
+<div class="row-fluid">
+	<div class="span4">
+		<div
+			ng-repeat="item in listGroups | startFrom:(currentPage-1)*pageSize | limitTo:pageSize">
+			<button class="btn btn-link btn-large" ng-click="selectGroup(item)">{{item.name}}</button>
+			<hr>
+		</div>
+	</div>
+	<div class="span8">
+		<h3 ng-show="selectedGroup == null">Please choose a Group</h3>
+		<h3>{{selectedGroup.name}}</h3>
+		<button class="btn btn-success" ng-disabled="selectedGroup == null"
+			ng-click="getTopPost(selectedGroup.id)">Top Post</button>
+		<button class="btn btn-success" ng-disabled="selectedGroup == null"
+			ng-click="getTopComment(selectedGroup.id)">Top Comment</button>
+		<button class="btn btn-success" ng-disabled="selectedGroup == null"
+			ng-click="getTopLiked(selectedGroup.id)">Top Liked</button>
+		<button class="btn btn-success" ng-disabled="selectedGroup == null"
+			ng-click="getTopSpam(selectedGroup.id)">Top Spam</button>
+		<hr>
+		<table class="table table-striped">
+			<caption>TOP 10</caption>
+			<thead>
+				<tr>
+					<th style="width: 15%">STT</th>
+					<th style="width: 40%">AVATAR</th>
+					<th style="width: 30%">NAME</th>
+					<th style="width: 15%">COUNT</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="item in listStatistic">
+					<td style="width: 15%">{{$index + 1}}</td>
+					<td style="width: 40%"><a href="{{item.user.link}}"><img
+							ng-src="{{item.avatar}}"></img></a></td>
+					<td style="width: 30%"><a href="{{item.user.link}}">{{item.user.name}}</a></td>
+					<td style="width: 15%">{{item.count}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<div ng-show="numberOfPages != 0">
+	<pagination num-pages="numberOfPages" current-page="currentPage"
+		instance="wildPagination" previous-text="<<" next-text=">>"></pagination>
+</div>

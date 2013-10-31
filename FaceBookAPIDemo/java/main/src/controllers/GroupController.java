@@ -54,24 +54,41 @@ public class GroupController extends Controller {
 
 	public static Result getGroupFeed(String id) {
 		FacebookManager facebookManager = new FacebookManager();
-		ResponseList<Post> posts = facebookManager.getGroupFeed(id);
+		ResponseList<Post> posts = facebookManager.getGroupFeed(id, 500);
 
+		return ok(Tools.listToJson(postToStatus(posts)));
+	}
+
+	private static List<models.Status> postToStatus(ResponseList<Post> posts) {
 		List<models.Status> s = new ArrayList<models.Status>();
-
 		for (Post post : posts) {
 			models.Status temp = new models.Status();
 			temp.message = post.getMessage();
 			temp.type = post.getType();
 			temp.url = post.getPicture();
 			temp.name = post.getFrom().getName();
+			FacebookManager fb = new FacebookManager();
+			temp.userAva = fb.getAva(post.getFrom().getId());
+			temp.from = post.getFrom();
 			temp.id = post.getId();
 			temp.comments = post.getComments();
 			temp.likes = post.getLikes();
+			temp.createdTime = post.getCreatedTime();
 			s.add(temp);
 		}
-
-		return ok(Tools.listToJson(s));
+		return s;
 	}
+	
+	//getGroupFeed10
+	
+	public static Result getGroupFeedBefore(String id, String time) {
+		FacebookManager facebookManager = new FacebookManager();
+		ResponseList<Post> posts = facebookManager.getGroupFeedBefore(id, time);
+
+		return ok(Tools.listToJson(postToStatus(posts)));
+	}
+	
+	
 
 	public static Result getTopPost(String id) {
 		List<StatisticInfo> res = getTop(id, new ByPost());
@@ -141,7 +158,7 @@ public class GroupController extends Controller {
 
 	private static List<StatisticInfo> getTop(String id, TopBy t) {
 		FacebookManager facebookManager = new FacebookManager();
-		ResponseList<Post> posts = facebookManager.getGroupFeed(id);
+		ResponseList<Post> posts = facebookManager.getGroupFeed(id, 500);
 
 		List<StatisticInfo> res = new ArrayList<StatisticInfo>();
 		HashMap<String, Integer> map = new HashMap<String, Integer>();

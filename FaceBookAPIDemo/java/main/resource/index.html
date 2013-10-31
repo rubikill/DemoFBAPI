@@ -9,71 +9,21 @@
 </head>
 <body ng-app="app">
 	<div id="fb-root"></div>
-	<div class="container-narrow" ng-controller="HomeCtrl">
-
+	<div class="container-narrow" ng-controller="GroupCtrl">
 		<div class="masthead">
 			<ul class="nav nav-pills pull-right">
-				<li class="active"><a href="#">Home</a></li>
-				<li><a href="#">About</a></li>
-				<li><a href="#">Contact</a></li>
+				<li ng-class="{active : path == '/group' }"><a href="#/group">Group</a></li>
+				<li ng-class="{active : path == '/statistic' }"><a href="#/statistic">Statistic</a></li>
 			</ul>
 			<fb:login-button
 				scope="email,user_likes,publish_actions,user_groups,friends_groups"
 				show-faces="true" width="200" max-rows="1"></fb:login-button>
 			<h3 class="muted">Demo Facebook API</h3>
 		</div>
-
-		<div>
-			<button class="btn btn-large btn-success" ng-click="getGroups()">Get
-				Groups</button>
-		</div>
 		<hr>
 
-		<div class="row-fluid">
-			<div class="span6">
-				<div
-					ng-repeat="item in listGroups | startFrom:(currentPage-1)*pageSize | limitTo:pageSize">
-					<h4>{{item.name}}</h4>
-					<button class="btn btn-success" ng-click="getTopPost(item.id)">Get
-						Top Post</button>
-					<button class="btn btn-success" ng-click="getTopComment(item.id)">Get
-						Top Comment</button>
-					<button class="btn btn-success" ng-click="getTopLiked(item.id)">Get
-						Top Liked</button>
-					<button class="btn btn-success" ng-click="getTopSpam(item.id)">Get
-						Top Spam</button>
+		<div ng-view></div>
 
-					<hr>
-				</div>
-			</div>
-			<div class="span6">
-				<table class="table table-striped">
-					<caption>TOP 10</caption>
-					<thead>
-						<tr>
-							<th style="width: 15%">STT</th>
-							<th style="width: 40%">AVATAR</th>
-							<th style="width: 30%">NAME</th>
-							<th style="width: 15%">COUNT</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr ng-repeat="item in listStatistic">
-							<td style="width: 15%">{{$index + 1}}</td>
-							<td style="width: 40%"><a href="{{item.user.link}}"><img
-									ng-src="{{item.avatar}}"></img></a></td>
-							<td style="width: 30%"><a href="{{item.user.link}}">{{item.user.name}}</a></td>
-							<td style="width: 15%">{{item.count}}</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</div>
-
-		<div ng-show="numberOfPages != 0">
-			<pagination num-pages="numberOfPages" current-page="currentPage"
-				instance="wildPagination" previous-text="<<" next-text=">>"></pagination>
-		</div>
 		<div class="footer">
 			<p>© Ha Thanh Toan 2013</p>
 		</div>

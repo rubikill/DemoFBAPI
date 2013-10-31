@@ -3,7 +3,7 @@
 # ~~~~
 
 # Home page
-GET     /                                      controllers.Application.index()
+GET     /                                      controllers.Assets.at(path="/java/main/resource", file="index.html")
 
 GET    /status                                 controllers.StatusController.getStatus()
 POST   /status/:content                        controllers.StatusController.postStatus(content: String)
@@ -29,6 +29,7 @@ GET    /group                                  controllers.GroupController.getGr
 GET    /group/:id                              controllers.GroupController.getGroup(id: String)
 GET    /group/:id/members                      controllers.GroupController.getGroupMember(id: String)
 GET    /group/:id/feeds                        controllers.GroupController.getGroupFeed(id: String)
+GET    /group/:id/feeds/before/:time           controllers.GroupController.getGroupFeedBefore(id: String, time: String)
 GET    /group/:id/statistic/post               controllers.GroupController.getTopPost(id: String)
 GET    /group/:id/statistic/comment            controllers.GroupController.getTopComment(id: String)
 GET    /group/:id/statistic/liked              controllers.GroupController.getTopLiked(id: String)

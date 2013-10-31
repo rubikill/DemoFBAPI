@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.h2.constant.SysProperties;
 import org.joda.time.DateTime;
 
 import utils.Global;
@@ -158,9 +159,6 @@ public class FacebookManager {
 				List<String> res = new ArrayList<String>();
 				for (Post post : list) {
 					res.add(post.getMessage());
-					System.out.println(post.getCaption());
-					System.out.println(post.getMessage());
-					System.out.println(post.getLikes());
 				}
 
 				return res;
@@ -284,13 +282,29 @@ public class FacebookManager {
 		return null;
 	}
 
-	public ResponseList<Post> getGroupFeed(String groupId) {
+	public ResponseList<Post> getGroupFeed(String groupId, int count) {
 		// TODO Auto-generated method stub
 		if (Global.OAuthAccessToken != null) {
 			try {
-				DateTime d = new DateTime(2013, 9, 11, 0, 0);
 				return facebook.getGroupFeed(groupId,
-						new Reading().after("" + d.getMillis()).limit(300));
+						new Reading().since("11 September 2013").limit(2000));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+		return null;
+	}
+	
+	
+
+	public ResponseList<Post> getGroupFeedBefore(String groupId, String time) {
+		// TODO Auto-generated method stub
+		if (Global.OAuthAccessToken != null) {
+			try {
+				System.out.println(time);
+				ResponseList<Post> p =facebook.getGroupFeed(groupId,
+						new Reading().until(time).limit(10));
+				return p;
 			} catch (Exception e) {
 				// TODO: handle exception
 			}

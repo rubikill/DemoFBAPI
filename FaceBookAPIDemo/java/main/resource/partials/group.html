@@ -1,0 +1,64 @@
+<div class="row-fluid">
+	<div class="span4">
+		<div ng-repeat="item in listGroups | startFrom:(currentPage-1)*pageSize | limitTo:pageSize">
+			<button class="btn btn-link btn-large" ng-click="getGroupFeedsBefore(0, item)">{{item.name}}</button>
+			<hr>
+		</div>
+	</div>
+	<div class="span8">
+		<h3 ng-show="selectedGroup == null">Please choose a Group</h3>
+		<h3>{{selectedGroup.name}}</h3>
+		<div style="height: 500px; overflow: auto;" when-scrolled="getGroupFeedsBefore(lastestCreatedTime, selectedGroup)">
+			<div ng-repeat="feed in listFeed">
+				<ul class="media-list">
+					<li class="media">
+						<a class="pull-left" href="http://www.facebook.com/{{feed.from.id}}">
+							<img class="lazy  media-object" src="{{feed.userAva}}" data-original="{{feed.userAva}}" alt="" width="68" height="68" style="display: inline-block;">
+						</a>
+						<div class="media-body">
+							<div class="media-heading comment-info"><a href="http://www.facebook.com/{{feed.from.id}}">{{feed.from.name}}</a></div>
+							<p>{{feed.message}}</p>
+							<p><button class="btn btn-link">Like </button>{{feed.likes.length}}  Comment: {{feed.comments.length}}</p>						
+							<!-- Nested media object -->
+							<div class="media" ng-repeat="comment in feed.comments">
+								<a class="pull-left " href="#">
+									<img class="lazy  media-object" src="#" data-original="#" alt="" width="68" height="68" style="display: inline-block;">
+								</a>
+								<div class="media-body">
+									<div class="media-heading comment-info"><a href="http://www.facebook.com/{{comment.from.id}}">{{comment.from.name}}</a></div>
+									<p>{{comment.message}}</p>
+									
+									<p><button class="btn btn-link" ng-disabled="{{!comment.userLikes}}">Like </button>{{comment.likeCount}}</p>
+								</div>
+							</div>
+
+							<div class="media">
+								<a class="pull-left" href="http://www.facebook.com/{{feed.from.id}}">
+									<img class="lazy  media-object" src="{{feed.userAva}}" data-original="{{feed.userAva}}" alt="" width="68" height="68" style="display: inline-block;">
+								</a>
+								<div class="media-body">
+									<div class="media-heading comment-info"><a href="http://www.facebook.com/{{comment.from.id}}">{{comment.from.name}}</a></div>
+									<textarea></textarea>
+									<button class="btn btn-success">Comment</button>
+								</div>
+							</div>
+							<!-- Nested media object -->
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+<div ng-show="numberOfPages != 0">
+	<pagination num-pages="numberOfPages" current-page="currentPage"
+	instance="wildPagination" previous-text="<<" next-text=">>"></pagination>
+</div>
+
+<fb:login-button
+scope="email,user_likes,publish_actions,user_groups,friends_groups"
+show-faces="true" width="200" max-rows="1"></fb:login-button>
+
+
+
+
