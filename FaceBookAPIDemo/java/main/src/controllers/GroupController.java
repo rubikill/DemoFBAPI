@@ -59,7 +59,7 @@ public class GroupController extends Controller {
 		return ok(Tools.listToJson(postToStatus(posts)));
 	}
 
-	private static List<models.Status> postToStatus(ResponseList<Post> posts) {
+	private static List<models.Status> postToStatus(ResponseList<Post> posts) {	
 		List<models.Status> s = new ArrayList<models.Status>();
 		for (Post post : posts) {
 			models.Status temp = new models.Status();
@@ -71,8 +71,8 @@ public class GroupController extends Controller {
 			temp.userAva = fb.getAva(post.getFrom().getId());
 			temp.from = post.getFrom();
 			temp.id = post.getId();
-			temp.comments = post.getComments();
-			temp.likes = post.getLikes();
+			temp.comments = fb.getComments(post.getId());
+			temp.likes = fb.getLikes(post.getId());
 			temp.createdTime = post.getCreatedTime();
 			s.add(temp);
 		}
@@ -87,8 +87,6 @@ public class GroupController extends Controller {
 
 		return ok(Tools.listToJson(postToStatus(posts)));
 	}
-	
-	
 
 	public static Result getTopPost(String id) {
 		List<StatisticInfo> res = getTop(id, new ByPost());

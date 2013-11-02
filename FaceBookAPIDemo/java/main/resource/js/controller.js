@@ -2,7 +2,7 @@
 
 var GroupCtrl = (function($scope, Home, Auth, Feed, Photo, Album, $http, User,
 		Page, Group, $location) {
-	
+
 	$scope.$on('$locationChangeSuccess', function() {
 		$scope.path = $location.path();
 	});
@@ -11,7 +11,7 @@ var GroupCtrl = (function($scope, Home, Auth, Feed, Photo, Album, $http, User,
 
 	window.fbAsyncInit = function() {
 		FB.init({
-			appId : '607212762654727', // App ID
+			appId : '380947045341754', // App ID
 			channelUrl : 'http://localhost:9000/index.html', // Channel File
 			status : true, // check login status
 			xfbml : true,
@@ -70,6 +70,7 @@ var GroupCtrl = (function($scope, Home, Auth, Feed, Photo, Album, $http, User,
 
 			$scope.user = response;
 			console.log('Good to see you, ' + response.name + '.');
+			$scope.getGroups();
 		});
 		FB.getLoginStatus(function(response) {
 			console.log("-------------------------------");
@@ -78,7 +79,7 @@ var GroupCtrl = (function($scope, Home, Auth, Feed, Photo, Album, $http, User,
 				Auth.setToken({
 					token : response.authResponse.accessToken
 				}, function(data) {
-					
+
 					console.log("success");
 				}, function(response) {
 					console.log("fail");
@@ -231,23 +232,24 @@ var GroupCtrl = (function($scope, Home, Auth, Feed, Photo, Album, $http, User,
 
 	}
 
-	Group.getGroups({
+	$scope.getGroups = function() {
+		Group.getGroups({
 
-	}, function(data) {
-		$scope.listGroups = [];
-		for ( var i = 0; i < data.length; i++) {
-			$scope.listGroups.push(data[i]);
-		}
+		}, function(data) {
+			$scope.listGroups = [];
+			for ( var i = 0; i < data.length; i++) {
+				$scope.listGroups.push(data[i]);
+			}
 
-		$scope.numberOfPages = Math
-				.ceil($scope.listGroups.length
-						/ $scope.pageSize);
+			$scope.numberOfPages = Math.ceil($scope.listGroups.length
+					/ $scope.pageSize);
 
-		console.log("success");
-	}, function(response) {
-		console.log("error");
-	});
-	
+			console.log("success");
+		}, function(response) {
+			console.log("error");
+		});
+	}
+
 	$scope.getPages = function() {
 
 		Page.getPagesAdmin({
@@ -289,11 +291,22 @@ var GroupCtrl = (function($scope, Home, Auth, Feed, Photo, Album, $http, User,
 		});
 	}
 
+	$scope.predicate = '-comments.length';
+
+	$scope.sortByLikes = function() {
+		$scope.predicate = '-likes.length';
+	}
+
+	$scope.sortByComments = function() {
+		$scope.predicate = '-comments.length';
+	}
+
 	$scope.getGroupFeeds = function(id) {
 		Group.getGroupFeeds({
 			id : id
 		}, function(data) {
 			$scope.listFeed = data;
+			console.log(data);
 			console.log("success");
 		}, function(response) {
 			console.log("error");
@@ -305,6 +318,10 @@ var GroupCtrl = (function($scope, Home, Auth, Feed, Photo, Album, $http, User,
 	}
 
 	$scope.getGroupFeedsBefore = function(date, group) {
+		if(group == null && group == undefined){
+			return;
+		}
+		
 		if (date === 0) {
 			$scope.selectedGroup = group;
 			Group.getGroupFeedsBefore({
@@ -392,5 +409,38 @@ var GroupCtrl = (function($scope, Home, Auth, Feed, Photo, Album, $http, User,
 		}, function(response) {
 			console.log("error");
 		});
+	}
+
+	//$scope.getAvatar = function(id) {
+	
+//	$http({method: 'GET', url: 'https://graph.facebook.com/100000430461163/picture?type=large'}).
+//	  success(function(data, status, headers, config) {
+//	    // this callback will be called asynchronously
+//	    // when the response is available
+//		  console.log(data);
+//	  }).
+//	  error(function(data, status, headers, config) {
+//	    // called asynchronously if an error occurs
+//	    // or server returns response with an error status.
+//	  });
+	
+	$scope.viewComment = function(feed) {
+		if(feed.commentClick == undefined){
+			feed.commentClick = true;
+		}else{
+			feed.commentClick = !feed.commentClick;
+		}
+		
+	}
+	
+	$scope.like = function(id) {
+		Feed.like({
+			id: id
+		}, function(data) {
+			
+		}, function(response) {
+			
+		});
+		
 	}
 });

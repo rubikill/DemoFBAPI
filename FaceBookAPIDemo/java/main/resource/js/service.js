@@ -23,8 +23,8 @@ appservice.filter('startFrom', function() {
 		}
 		return [];
 	}
-});
-
+});	
+	
 appservice.factory('Home', function($resource) {
 	return $resource('/status/:content', {
 		content : "@content"

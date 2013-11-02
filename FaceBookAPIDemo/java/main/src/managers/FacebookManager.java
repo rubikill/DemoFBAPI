@@ -10,11 +10,13 @@ import org.joda.time.DateTime;
 import utils.Global;
 import facebook4j.Admin;
 import facebook4j.Album;
+import facebook4j.Comment;
 import facebook4j.Facebook;
 import facebook4j.FacebookException;
 import facebook4j.FacebookFactory;
 import facebook4j.Group;
 import facebook4j.GroupMember;
+import facebook4j.Like;
 import facebook4j.Media;
 import facebook4j.Photo;
 import facebook4j.Post;
@@ -317,6 +319,28 @@ public class FacebookManager {
 		if (Global.OAuthAccessToken != null) {
 			try {
 				return facebook.getGroupMembers(groupId);
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+		return null;
+	}
+	
+	public ResponseList<Comment> getComments(String id){
+		if (Global.OAuthAccessToken != null) {
+			try {
+				return facebook.getPostComments(id, (new Reading()).limit(1000));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+		return null;
+	}
+	
+	public ResponseList<Like> getLikes(String id){
+		if (Global.OAuthAccessToken != null) {
+			try {
+				return facebook.getPostLikes(id, (new Reading()).limit(1000));
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
