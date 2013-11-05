@@ -120,11 +120,13 @@ appservice.factory('Page', function($resource) {
 });
 
 appservice.factory('Group', function($resource) {
-	return $resource('/group/:id/:action/:by/:par', {
+	return $resource('/group/:id/:action/:by/:par1/:after/:par2', {
 		id : "@id",
 		action : "@action",
 		by : "@by",
-		par : "@par"
+		par1 : "@par1",
+		after : "@after",
+		par2 : "@par2"
 	}, {
 		getGroups : {
 			method : 'GET',
@@ -153,6 +155,15 @@ appservice.factory('Group', function($resource) {
 			params : {
 				action : "feeds",
 				by : "before"
+			}
+		},
+		getGroupFeedsBetween : {
+			method : 'GET',
+			isArray : true,
+			params : {
+				action : "feeds",
+				by : "before",
+				after : "after"
 			}
 		},
 		getGroupCover : {

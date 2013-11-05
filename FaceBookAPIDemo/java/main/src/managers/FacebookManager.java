@@ -229,18 +229,6 @@ public class FacebookManager {
 		return null;
 	}
 
-	public User getInfo(String userId) {
-		if (Global.OAuthAccessToken != null) {
-			try {
-
-				return facebook.getUser(userId);
-			} catch (Exception e) {
-				// TODO: handle exception
-			}
-		}
-		return null;
-	}
-
 	public URL getAva(String userId) {
 		if (Global.OAuthAccessToken != null) {
 			try {
@@ -284,12 +272,12 @@ public class FacebookManager {
 		return null;
 	}
 
-	public ResponseList<Post> getGroupFeed(String groupId, int count) {
+	public ResponseList<Post> getGroupFeed(String groupId) {
 		// TODO Auto-generated method stub
 		if (Global.OAuthAccessToken != null) {
 			try {
 				return facebook.getGroupFeed(groupId,
-						new Reading().since("11 September 2013").limit(2000));
+						new Reading().since("11 September 2000").limit(Global.limit));
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
@@ -297,7 +285,18 @@ public class FacebookManager {
 		return null;
 	}
 	
-	
+	public ResponseList<Post> getGroupFeedBetween(String groupId, String from, String to) {
+		// TODO Auto-generated method stub
+		if (Global.OAuthAccessToken != null) {
+			try {
+				return facebook.getGroupFeed(groupId,
+						new Reading().since(from).until(to).limit(Global.limit));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+		return null;
+	}
 
 	public ResponseList<Post> getGroupFeedBefore(String groupId, String time) {
 		// TODO Auto-generated method stub

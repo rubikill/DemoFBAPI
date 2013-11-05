@@ -15,7 +15,7 @@ public class Statistics {
 		FacebookManager facebookManager = new FacebookManager();
 		HashMap<String, Integer> map = new HashMap<String, Integer>();
 
-		for (Post post : facebookManager.getGroupFeed(groupId, 500)) {
+		for (Post post : facebookManager.getGroupFeed(groupId)) {
 			String name = post.getName();
 			if (!map.containsKey(name)) {
 				map.put(name, 1);

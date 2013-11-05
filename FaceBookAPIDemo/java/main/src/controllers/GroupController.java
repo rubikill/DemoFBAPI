@@ -54,7 +54,7 @@ public class GroupController extends Controller {
 
 	public static Result getGroupFeed(String id) {
 		FacebookManager facebookManager = new FacebookManager();
-		ResponseList<Post> posts = facebookManager.getGroupFeed(id, 500);
+		ResponseList<Post> posts = facebookManager.getGroupFeed(id);
 
 		return ok(Tools.listToJson(postToStatus(posts)));
 	}
@@ -79,7 +79,11 @@ public class GroupController extends Controller {
 		return s;
 	}
 	
-	//getGroupFeed10
+	public static Result getGroupFeedBetween(String id, String from, String to){
+		FacebookManager facebookManager = new FacebookManager();
+		ResponseList<Post> posts = facebookManager.getGroupFeedBetween(id, from, to);
+		return ok(Tools.listToJson(posts));
+	}
 	
 	public static Result getGroupFeedBefore(String id, String time) {
 		FacebookManager facebookManager = new FacebookManager();
@@ -122,8 +126,9 @@ public class GroupController extends Controller {
 		for (StatisticInfo statisticInfo : res3) {
 			if (statisticInfo.count != 0) {
 				Spamer s = new Spamer();
-				s.user = statisticInfo.user;
-				s.avatar = statisticInfo.avatar;
+				s.id = statisticInfo.id;
+				//s.avatar = statisticInfo.avatar;
+				s.name = statisticInfo.name;
 				s.percent = statisticInfo.count;
 				res4.add(s);
 			}
@@ -133,30 +138,29 @@ public class GroupController extends Controller {
 		HashMap<String, Integer> map2 = new HashMap<String, Integer>();
 
 		for (int i = 0; i < res1.size(); i++) {
-			map1.put(res1.get(i).user.getId(), res1.get(i).count);
-			map2.put(res2.get(i).user.getId(), res2.get(i).count);
+			map1.put(res1.get(i).id, res1.get(i).count);
+			map2.put(res2.get(i).id, res2.get(i).count);
 		}
 
 		for (Spamer spamer : res4) {
-			if (map1.get(spamer.user.getId()) != null
-					&& map2.get(spamer.user.getId()) != null) {
-				spamer.percent = (map1.get(spamer.user.getId()) + map2
-						.get(spamer.user.getId())) / spamer.percent;
+			if (map1.get(spamer.id) != null && map2.get(spamer.id) != null) {
+				spamer.percent = (map1.get(spamer.id) + map2
+					.get(spamer.id)) / spamer.percent;
 			}
 			else{
 				spamer.percent = 0;
 			}
 		}
-		
+
 		Collections.sort(res4, new CompareSpamer());
-		
+
 
 		return ok(Tools.listToJson(get10(res4)));
 	}
 
 	private static List<StatisticInfo> getTop(String id, TopBy t) {
 		FacebookManager facebookManager = new FacebookManager();
-		ResponseList<Post> posts = facebookManager.getGroupFeed(id, 500);
+		ResponseList<Post> posts = facebookManager.getGroupFeed(id);
 
 		List<StatisticInfo> res = new ArrayList<StatisticInfo>();
 		HashMap<String, Integer> map = new HashMap<String, Integer>();
@@ -169,9 +173,10 @@ public class GroupController extends Controller {
 			Map.Entry mEntry = (Map.Entry) iter.next();
 			StatisticInfo info = new StatisticInfo();
 
-			String uId = mEntry.getKey().toString();
-			info.user = facebookManager.getUser(uId);
-			info.avatar = facebookManager.getAva(uId);
+			//String uId = ;
+			info.id = mEntry.getKey().toString();
+			info.name = facebookManager.getUser(info.id).getName();
+			//info.avatar = facebookManager.getAva(uId);
 			info.count = Integer.parseInt(mEntry.getValue().toString());
 			res.add(info);
 		}

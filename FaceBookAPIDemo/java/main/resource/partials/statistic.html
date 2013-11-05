@@ -9,35 +9,56 @@
 	<div class="span8">
 		<h3 ng-show="selectedGroup == null">Please choose a Group</h3>
 		<h3>{{selectedGroup.name}}</h3>
-		<button class="btn btn-success" ng-disabled="selectedGroup == null"
-			ng-click="getTopPost(selectedGroup.id)">Top Post</button>
-		<button class="btn btn-success" ng-disabled="selectedGroup == null"
-			ng-click="getTopComment(selectedGroup.id)">Top Comment</button>
-		<button class="btn btn-success" ng-disabled="selectedGroup == null"
-			ng-click="getTopLiked(selectedGroup.id)">Top Liked</button>
-		<button class="btn btn-success" ng-disabled="selectedGroup == null"
-			ng-click="getTopSpam(selectedGroup.id)">Top Spam</button>
+		<div class="row-fluid">
+			<div class="btn-group">
+				<button class="btn btn-success" ng-disabled="selectedGroup == null"
+					ng-click="getTopPost(selectedGroup.id)">Top Post</button>
+				<button class="btn btn-success" ng-disabled="selectedGroup == null"
+					ng-click="getTopComment(selectedGroup.id)">Top Comment</button>
+				<button class="btn btn-success" ng-disabled="selectedGroup == null"
+					ng-click="getTopLiked(selectedGroup.id)">Top Liked</button>
+				<button class="btn btn-success" ng-disabled="selectedGroup == null"
+					ng-click="getTopSpam(selectedGroup.id)">Top Spam</button>
+			</div>
+		</div>
+		<br>
+		<div class="row-fluid">
+			From: <input type="text" class="input-small"
+				ng-model="datepicker.from" bs-datepicker date-format="yyyy-mm-dd"
+				value="{{ datepicker.from | date:'dd-MM-yyyy' }}"> To: <input
+				type="text" class="input-small" ng-model="datepicker.to"
+				bs-datepicker date-format="yyyy-mm-dd"
+				value="{{ datepicker.to | date:'dd-MM-yyyy' }}">
+			<button ng-click="cal()" class="btn" >Analyze</button>
+		</div>
 		<hr>
-		<table class="table table-striped">
-			<caption>TOP 10</caption>
-			<thead>
-				<tr>
-					<th style="width: 15%">STT</th>
-					<th style="width: 40%">AVATAR</th>
-					<th style="width: 30%">NAME</th>
-					<th style="width: 15%">COUNT</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr ng-repeat="item in listStatistic">
-					<td style="width: 15%">{{$index + 1}}</td>
-					<td style="width: 40%"><a href="{{item.user.link}}"><img
-							ng-src="{{item.avatar}}"></img></a></td>
-					<td style="width: 30%"><a href="{{item.user.link}}">{{item.user.name}}</a></td>
-					<td style="width: 15%">{{item.count}}</td>
-				</tr>
-			</tbody>
-		</table>
+		<div ng-show="listStatistic.count > 0">
+			<table class="table table-striped">
+				<h3>TOP 10</h3>
+				<thead>
+					<tr>
+						<th style="width: 15%">STT</th>
+						<th style="width: 40%">AVATAR</th>
+						<th style="width: 30%">NAME</th>
+						<th style="width: 15%" ng-show="listStatistic[0].count != null">COUNT</th>
+						<th style="width: 15%" ng-show="listStatistic[0].percent != null">PERCENT</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="item in listStatistic">
+						<td style="width: 15%">{{$index + 1}}</td>
+						<td style="width: 40%"><a
+							href="https://wwww.facebook.com/{{item.id}}"> <img
+								ng-src="https://graph.facebook.com/{{item.id}}/picture?type=square"></img>
+						</a></td>
+						<td style="width: 30%"><a
+							href="https://wwww.facebook.com/{{item.id}}">{{item.name}}</a></td>
+						<td style="width: 15%" ng-show="item.count != null">{{item.count}}</td>
+						<td style="width: 15%" ng-show="item.percent != null">{{item.percent}}%</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 	</div>
 </div>
 

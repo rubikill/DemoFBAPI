@@ -11,7 +11,7 @@ var GroupCtrl = (function($scope, Home, Auth, Feed, Photo, Album, $http, User,
 
 	window.fbAsyncInit = function() {
 		FB.init({
-			appId : '380947045341754', // App ID
+			appId : '607212762654727', // App ID
 			channelUrl : 'http://localhost:9000/index.html', // Channel File
 			status : true, // check login status
 			xfbml : true,
@@ -93,145 +93,6 @@ var GroupCtrl = (function($scope, Home, Auth, Feed, Photo, Album, $http, User,
 		});
 	}
 
-	$scope.postStatus = function() {
-		console.log("-----click------");
-		console.log($scope.token);
-
-		// https:://graph.facebook.com/oauth/authorize?client_id=' . FB_APP_ID .
-		// '&redirect_uri=' . REDIRECT_URI . '&scope=publish_stream'
-		Home.postStatus({
-			content : $scope.content
-		}, function(data) {
-			console.log("success");
-		}, function(response) {
-			console.log("error");
-			// alertify.error(localize.getLocalizedStringWithParams("_EditTaskFail_",
-			// [response.data]));
-		});
-	}
-
-	$scope.postPhoto = function() {
-		console.log("-----post photo btn click------");
-		console.log($scope.token);
-
-		for ( var i = 0; i < $scope.files.length; i++) {
-			var $file = $scope.files[i];
-			$http.uploadFile({
-				url : '/photo/:photo', // upload.php script, node.js route,
-				// or servlet upload url)
-				data : {
-					myObj : "Upload file"
-				},
-				file : $file,
-				photo : $scope.content
-			}).then(function(data, status, headers, config) {
-				// file is uploaded successfully
-				console.log(data);
-			}, function(dada) {
-				console.log(data);
-			}, function(response) {
-				console.log(response);
-			});
-		}
-	}
-
-	$scope.files = [];
-	$scope.listFeed = [];
-	$scope.getfeeds = function() {
-		console.log("------feed button click-------");
-
-		Feed.getFeeds({
-
-		}, function(data) {
-			$scope.listFeed = [];
-			for ( var i = 0; i < data.length; i++) {
-				$scope.listFeed.push(data[i]);
-			}
-
-			console.log(angular.fromJson(data));
-		}, function(response) {
-			console.log("error");
-		});
-	}
-
-	$scope.onFileSelect = function($files) {
-		$scope.files = $files;
-	}
-
-	$scope.listAlbum = [];
-	$scope.getAlbums = function() {
-		console.log("------albums button click-------");
-
-		Album.getAlbums({
-
-		}, function(data) {
-			$scope.listAlbum = [];
-			for ( var i = 0; i < data.length; i++) {
-				$scope.listAlbum.push(data[i]);
-			}
-
-			console.log(angular.fromJson(data));
-		}, function(response) {
-			console.log("error");
-		});
-	}
-
-	$scope.listPhotos = [];
-	$scope.getAlbum = function(id) {
-		console.log("------view photos button click-------");
-
-		Album.getAlbum({
-			id : id
-		}, function(data) {
-			$scope.listPhotos = [];
-			for ( var i = 0; i < data.length; i++) {
-				$scope.listPhotos.push(data[i]);
-			}
-			console.log(angular.fromJson(data));
-		}, function(response) {
-			console.log("error");
-		});
-	}
-
-	$scope.checkLike = function(listLike) {
-		for ( var i = 0; i < listLike.length; i++) {
-			if (listLike[i].id == $scope.user.id) {
-				$scope.isLike = true;
-				return;
-			}
-		}
-		$scope.isLike = false;
-	}
-
-	$scope.like = function(id, listLike) {
-		console.log(id);
-
-		Feed.like({
-			id : id
-		}, function(data) {
-			console.log("success");
-			$scope.isLike = true;
-		}, function(response) {
-			console.log("error");
-		});
-
-	}
-
-	$scope.unlike = function(id, listLike) {
-
-		console.log(id);
-
-		Feed.unlike({
-			id : id
-		}, function(data) {
-			console.log("success");
-			$scope.isLike = false;
-		}, function(response) {
-			console.log("error");
-		});
-
-	}
-
 	$scope.getGroups = function() {
 		Group.getGroups({
 
@@ -245,18 +106,6 @@ var GroupCtrl = (function($scope, Home, Auth, Feed, Photo, Album, $http, User,
 					/ $scope.pageSize);
 
 			console.log("success");
-		}, function(response) {
-			console.log("error");
-		});
-	}
-
-	$scope.getPages = function() {
-
-		Page.getPagesAdmin({
-
-		}, function(data) {
-			console.log("success");
-			console.log(data);
 		}, function(response) {
 			console.log("error");
 		});
@@ -318,15 +167,15 @@ var GroupCtrl = (function($scope, Home, Auth, Feed, Photo, Album, $http, User,
 	}
 
 	$scope.getGroupFeedsBefore = function(date, group) {
-		if(group == null && group == undefined){
+		if (group == null && group == undefined) {
 			return;
 		}
-		
+
 		if (date === 0) {
 			$scope.selectedGroup = group;
 			Group.getGroupFeedsBefore({
 				id : group.id,
-				par : (new Date()).toDateString()
+				par1 : (new Date()).toDateString()
 			}, function(data) {
 				$scope.listFeed = data;
 				$scope.lastestCreatedTime = data[data.length - 1].createdTime;
@@ -337,7 +186,7 @@ var GroupCtrl = (function($scope, Home, Auth, Feed, Photo, Album, $http, User,
 		} else {
 			Group.getGroupFeedsBefore({
 				id : group.id,
-				par : (new Date(date)).toDateString()
+				par1 : (new Date(date)).toDateString()
 			}, function(data) {
 				for ( var i = 0; i < data.length; i++) {
 					$scope.listFeed.push(data[i]);
@@ -349,6 +198,24 @@ var GroupCtrl = (function($scope, Home, Auth, Feed, Photo, Album, $http, User,
 			});
 		}
 
+	}
+
+	$scope.getGroupFeedsBetween = function(group, from, to) {
+		if (group == null && group == undefined) {
+			return;
+		}
+
+		Group.getGroupFeedsBetween({
+			id : group.id,
+			par1 : to,
+			par2 : from
+		}, function(data) {
+			$scope.listFeed = data;
+			// $scope.lastestCreatedTime = data[data.length - 1].createdTime;
+			console.log("success");
+		}, function(response) {
+			console.log("error");
+		});
 	}
 
 	$scope.listStatistic = [];
@@ -400,47 +267,29 @@ var GroupCtrl = (function($scope, Home, Auth, Feed, Photo, Album, $http, User,
 		});
 	}
 
-	$scope.getGroupCover = function(id) {
-		Group.getGroupCover({
-			id : id
-		}, function(data) {
-			console.log(angular.fromJson(data));
-			console.log("success");
-		}, function(response) {
-			console.log("error");
-		});
-	}
-
-	//$scope.getAvatar = function(id) {
-	
-//	$http({method: 'GET', url: 'https://graph.facebook.com/100000430461163/picture?type=large'}).
-//	  success(function(data, status, headers, config) {
-//	    // this callback will be called asynchronously
-//	    // when the response is available
-//		  console.log(data);
-//	  }).
-//	  error(function(data, status, headers, config) {
-//	    // called asynchronously if an error occurs
-//	    // or server returns response with an error status.
-//	  });
-	
 	$scope.viewComment = function(feed) {
-		if(feed.commentClick == undefined){
+		if (feed.commentClick == undefined) {
 			feed.commentClick = true;
-		}else{
+		} else {
 			feed.commentClick = !feed.commentClick;
 		}
-		
+
 	}
-	
+
 	$scope.like = function(id) {
 		Feed.like({
-			id: id
+			id : id
 		}, function(data) {
-			
+
 		}, function(response) {
-			
+
 		});
-		
+	}
+	
+	$scope.datepicker = { from : new Date("2000-01-02T00:00:00.000Z"),
+			to : new Date()};
+	  
+	$scope.cal = function() {		
+		console.log($scope.datepicker);
 	}
 });
