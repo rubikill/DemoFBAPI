@@ -3,10 +3,14 @@ package controllers;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import managers.FacebookManager;
 import models.Spamer;
@@ -16,6 +20,7 @@ import play.mvc.Result;
 import utils.ByComment;
 import utils.ByLiked;
 import utils.ByPost;
+import utils.BySpam;
 import utils.Compare;
 import utils.CompareSpamer;
 import utils.Tools;
@@ -59,16 +64,14 @@ public class GroupController extends Controller {
 		return ok(Tools.listToJson(postToStatus(posts)));
 	}
 
-	private static List<models.Status> postToStatus(ResponseList<Post> posts) {	
+	private static List<models.Status> postToStatus(ResponseList<Post> posts) {
 		List<models.Status> s = new ArrayList<models.Status>();
 		for (Post post : posts) {
 			models.Status temp = new models.Status();
 			temp.message = post.getMessage();
 			temp.type = post.getType();
 			temp.url = post.getPicture();
-			temp.name = post.getFrom().getName();
 			FacebookManager fb = new FacebookManager();
-			temp.userAva = fb.getAva(post.getFrom().getId());
 			temp.from = post.getFrom();
 			temp.id = post.getId();
 			temp.comments = fb.getComments(post.getId());
@@ -78,110 +81,123 @@ public class GroupController extends Controller {
 		}
 		return s;
 	}
-	
-	public static Result getGroupFeedBetween(String id, String from, String to){
+
+	public static Result getGroupFeedBetween(String id, String from, String to) {
 		FacebookManager facebookManager = new FacebookManager();
-		ResponseList<Post> posts = facebookManager.getGroupFeedBetween(id, from, to);
-		return ok(Tools.listToJson(posts));
+		ResponseList<Post> posts = facebookManager.getGroupFeedBetween(id,
+				from, to);
+		return ok(Tools.listToJson(postToStatus(posts)));
 	}
-	
-	public static Result getGroupFeedBefore(String id, String time) {
+
+	public static Result getGroupFeedBefore(String id, String from, String to) {
 		FacebookManager facebookManager = new FacebookManager();
-		ResponseList<Post> posts = facebookManager.getGroupFeedBefore(id, time);
+		ResponseList<Post> posts = facebookManager.getGroupFeedBefore(id, from, to);
 
 		return ok(Tools.listToJson(postToStatus(posts)));
 	}
 
-	public static Result getTopPost(String id) {
-		List<StatisticInfo> res = getTop(id, new ByPost());
-		Collections.sort(res, new Compare());
-		List<StatisticInfo> res1 = get10(res);
-
-		return ok(Tools.listToJson(res1));
+	public static Result getTopPost(String id, String from, String to) {
+		List<StatisticInfo> res = getTop(id, new ByPost(), from, to);
+		
+		return ok(Tools.listToJson(res));
 	}
 
-	public static Result getTopComment(String id) {
-		List<StatisticInfo> res = getTop(id, new ByComment());
-		Collections.sort(res, new Compare());
-		List<StatisticInfo> res1 = get10(res);
-
-		return ok(Tools.listToJson(res1));
+	public static Result getTopComment(String id, String from, String to) {
+		List<StatisticInfo> res = getTop(id, new ByComment(), from, to);
+		
+		return ok(Tools.listToJson(res));
 	}
 
-	public static Result getTopLiked(String id) {
-		List<StatisticInfo> res = getTop(id, new ByLiked());
-		Collections.sort(res, new Compare());
-		List<StatisticInfo> res1 = get10(res);
-
-		return ok(Tools.listToJson(res1));
+	public static Result getTopLiked(String id, String from, String to) {
+		List<StatisticInfo> res = getTop(id, new ByLiked(), from, to);
+		
+		return ok(Tools.listToJson(res));
 	}
 
-	public static Result getTopSpam(String id) {
-		List<StatisticInfo> res1 = getTop(id, new ByPost());
-		List<StatisticInfo> res2 = getTop(id, new ByComment());
-		List<StatisticInfo> res3 = getTop(id, new ByLiked());
+	public static Result getTopSpam(String id, String from, String to) {
+		TreeMap treeMap = new TreeMap();		
+		new BySpam().doGet(treeMap, id, from, to);
 
-		List<Spamer> res4 = new ArrayList<Spamer>();
+		Map<String, Float> sortedMap = sortByComparator(treeMap);
 
-		for (StatisticInfo statisticInfo : res3) {
-			if (statisticInfo.count != 0) {
-				Spamer s = new Spamer();
-				s.id = statisticInfo.id;
-				//s.avatar = statisticInfo.avatar;
-				s.name = statisticInfo.name;
-				s.percent = statisticInfo.count;
-				res4.add(s);
-			}
-		}
+		Iterator iter = sortedMap.entrySet().iterator();
+		int i = 0;
 
-		HashMap<String, Integer> map1 = new HashMap<String, Integer>();
-		HashMap<String, Integer> map2 = new HashMap<String, Integer>();
-
-		for (int i = 0; i < res1.size(); i++) {
-			map1.put(res1.get(i).id, res1.get(i).count);
-			map2.put(res2.get(i).id, res2.get(i).count);
-		}
-
-		for (Spamer spamer : res4) {
-			if (map1.get(spamer.id) != null && map2.get(spamer.id) != null) {
-				spamer.percent = (map1.get(spamer.id) + map2
-					.get(spamer.id)) / spamer.percent;
-			}
-			else{
-				spamer.percent = 0;
-			}
-		}
-
-		Collections.sort(res4, new CompareSpamer());
-
-
-		return ok(Tools.listToJson(get10(res4)));
-	}
-
-	private static List<StatisticInfo> getTop(String id, TopBy t) {
 		FacebookManager facebookManager = new FacebookManager();
-		ResponseList<Post> posts = facebookManager.getGroupFeed(id);
-
-		List<StatisticInfo> res = new ArrayList<StatisticInfo>();
-		HashMap<String, Integer> map = new HashMap<String, Integer>();
-
-		t.doGet(posts, map);
-
-		Iterator iter = map.entrySet().iterator();
-
+		List<Spamer> res = new ArrayList<Spamer>();
 		while (iter.hasNext()) {
+			if (i > 9) {
+				break;
+			}
+			Map.Entry mEntry = (Map.Entry) iter.next();
+			Spamer info = new Spamer();
+
+			info.id = mEntry.getKey().toString();
+			info.name = facebookManager.getUser(info.id).getName();
+			info.percent = Float.parseFloat(mEntry.getValue().toString());
+			res.add(info);
+			i++;
+		}
+
+		return ok(Tools.listToJson(res));
+	}
+
+	private static List<StatisticInfo> getTop(String id, TopBy t, String from,
+			String to) {
+		TreeMap treeMap = new TreeMap();		
+		t.doGet(treeMap, id, from, to);
+
+		Map<String, String> sortedMap = sortByComparator(treeMap);
+
+		Iterator iter = sortedMap.entrySet().iterator();
+		int i = 0;
+
+		FacebookManager facebookManager = new FacebookManager();
+		List<StatisticInfo> res = new ArrayList<StatisticInfo>();
+		while (iter.hasNext()) {
+			if (i > 9) {
+				break;
+			}
 			Map.Entry mEntry = (Map.Entry) iter.next();
 			StatisticInfo info = new StatisticInfo();
 
-			//String uId = ;
 			info.id = mEntry.getKey().toString();
 			info.name = facebookManager.getUser(info.id).getName();
-			//info.avatar = facebookManager.getAva(uId);
 			info.count = Integer.parseInt(mEntry.getValue().toString());
 			res.add(info);
+			i++;
 		}
 
 		return res;
+	}
+
+	private static Map sortByComparator(Map unsortMap) {
+
+		List list = new LinkedList(unsortMap.entrySet());
+
+		// sort list based on comparator
+		Collections.sort(list, new Comparator() {
+			public int compare(Object o1, Object o2) {
+				return ((Comparable) ((Map.Entry) (o2)).getValue())
+						.compareTo(((Map.Entry) (o1)).getValue());
+			}
+		});
+
+		// put sorted list into map again
+		// LinkedHashMap make sure order in which keys were inserted
+		Map sortedMap = new LinkedHashMap();
+		for (Iterator it = list.iterator(); it.hasNext();) {
+			Map.Entry entry = (Map.Entry) it.next();
+			sortedMap.put(entry.getKey(), entry.getValue());
+		}
+		return sortedMap;
+	}
+
+	public static void printMap(Map<String, String> map) {
+		for (Map.Entry entry : map.entrySet()) {
+			System.out.println("Key : " + entry.getKey() + " Value : "
+					+ entry.getValue());
+		}
 	}
 
 	private static <T> List<T> get10(List<T> res) {

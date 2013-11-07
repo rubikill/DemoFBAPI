@@ -1,7 +1,7 @@
 'use strict';
 
 var app = angular
-		.module('app', [ 'app.services', 'scroll', 'infinite-scroll' ]);
+		.module('app', [ 'app.services', 'scroll', 'infinite-scroll' , 'ngProgress']);
 
 app.config([ '$routeProvider', function($routeProvider, $rootScope) {
 	$routeProvider.when('/group', {

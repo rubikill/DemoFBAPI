@@ -25,13 +25,12 @@ public class FeedController extends Controller {
 		for (Post post : facebookManager.getFeeds()) {
 			models.Status temp = new models.Status();
 			temp.message = post.getMessage();
-			temp.type = post.getType();
-			temp.url = post.getPicture();
-			temp.name = post.getFrom().getName();
-			temp.id = post.getId();
-			temp.comments = post.getComments();
+//			temp.type = post.getType();
+//			temp.url = post.getPicture();
+//			temp.id = post.getId();
+//			temp.comments = post.getComments();
 
-			temp.likes = post.getLikes();
+			//temp.likes = post.getLikes();
 
 			s.add(temp);
 		}

@@ -1,13 +1,22 @@
 package managers;
 
+import java.io.IOException;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.TimeZone;
 
 import org.h2.constant.SysProperties;
 import org.joda.time.DateTime;
 
 import utils.Global;
+import utils.Tools;
 import facebook4j.Admin;
 import facebook4j.Album;
 import facebook4j.Comment;
@@ -24,6 +33,7 @@ import facebook4j.Reading;
 import facebook4j.ResponseList;
 import facebook4j.User;
 import facebook4j.conf.ConfigurationBuilder;
+import facebook4j.internal.org.json.JSONArray;
 
 public class FacebookManager {
 
@@ -276,21 +286,10 @@ public class FacebookManager {
 		// TODO Auto-generated method stub
 		if (Global.OAuthAccessToken != null) {
 			try {
-				return facebook.getGroupFeed(groupId,
-						new Reading().since("11 September 2000").limit(Global.limit));
-			} catch (Exception e) {
-				// TODO: handle exception
-			}
-		}
-		return null;
-	}
-	
-	public ResponseList<Post> getGroupFeedBetween(String groupId, String from, String to) {
-		// TODO Auto-generated method stub
-		if (Global.OAuthAccessToken != null) {
-			try {
-				return facebook.getGroupFeed(groupId,
-						new Reading().since(from).until(to).limit(Global.limit));
+				return facebook.getGroupFeed(
+						groupId,
+						new Reading().since("11 September 2000").limit(
+								Global.limit));
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
@@ -298,13 +297,133 @@ public class FacebookManager {
 		return null;
 	}
 
-	public ResponseList<Post> getGroupFeedBefore(String groupId, String time) {
+	public List<models.Post> getGroupFeedBetweenFQL(String groupId, String from,
+			String to) {
 		// TODO Auto-generated method stub
 		if (Global.OAuthAccessToken != null) {
 			try {
-				System.out.println(time);
-				ResponseList<Post> p =facebook.getGroupFeed(groupId,
-						new Reading().until(time).limit(10));
+				List<models.Post> posts = getPostsFQL(groupId, from, to);
+				for (models.Post post : posts) {
+					post.comments = getCommentsFQL(post.post_id);
+				}
+				
+				return posts;
+
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+		return null;
+	}
+	
+	public ResponseList<Post> getGroupFeedBetween(String groupId, String from,
+			String to) {
+		// TODO Auto-generated method stub
+		if (Global.OAuthAccessToken != null) {
+			try {
+				return facebook.getGroupFeed(groupId, new Reading().since(from)
+						.until(to).limit(Global.limit));
+
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+		return null;
+	}
+
+	public List<models.Post> getPostsFQL(String gId, String from, String to) {
+		SimpleDateFormat format = new SimpleDateFormat(
+				"EEE, dd MMM yyyy HH:mm:ss", Locale.US);
+		format.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+		try {
+			Date dateFrom = format.parse(from);
+			Date dateTo = format.parse(to);
+			long millisFrom = dateFrom.getTime() / 1000;
+			long millisTo = dateTo.getTime() / 1000;
+			
+			String fql = "SELECT post_id, actor_id, likes.count, message FROM stream WHERE source_id = '"
+					+ gId
+					+ "' AND created_time >= "
+					+ millisFrom
+					+ " AND created_time <= " + millisTo + " LIMIT 1000";
+
+			return Tools.listFromJson(facebook.executeFQL(fql).toString(),
+					models.Post.class);
+
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (FacebookException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+	
+	public List<models.Comment> getPostsCommentsFQL(String gId, String from, String to) {
+		SimpleDateFormat format = new SimpleDateFormat(
+				"EEE, dd MMM yyyy HH:mm:ss", Locale.US);
+		format.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+		try {
+			Date dateFrom = format.parse(from);
+			Date dateTo = format.parse(to);
+			long millisFrom = dateFrom.getTime() / 1000;
+			long millisTo = dateTo.getTime() / 1000;
+
+			String fql = "SELECT fromid, id, likes FROM comment WHERE post_id IN (SELECT post_id, actor_id, likes.count FROM stream WHERE source_id = '"
+					+ gId
+					+ "' AND created_time >= "
+					+ millisFrom
+					+ " AND created_time <= " + millisTo + " LIMIT 1000)";
+
+			return Tools.listFromJson(facebook.executeFQL(fql).toString(),
+					models.Comment.class);
+
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (FacebookException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	public List<models.Comment> getCommentsFQL(String pId) {
+		String fql = "SELECT fromid, id, likes, text FROM comment WHERE post_id = '"
+				+ pId + "' LIMIT 1000";
+		try {
+			//System.out.println(facebook.executeFQL(fql).toString());
+			return Tools.listFromJson(facebook.executeFQL(fql).toString(),
+					models.Comment.class);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (FacebookException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	public ResponseList<Post> getGroupFeedBefore(String groupId, String from, String to) {
+		// TODO Auto-generated method stub
+		if (Global.OAuthAccessToken != null) {
+			try {
+				ResponseList<Post> p = facebook.getGroupFeed(groupId,
+						new Reading().since(from).until(to).limit(10));
+				
 				return p;
 			} catch (Exception e) {
 				// TODO: handle exception
@@ -324,19 +443,20 @@ public class FacebookManager {
 		}
 		return null;
 	}
-	
-	public ResponseList<Comment> getComments(String id){
+
+	public ResponseList<Comment> getComments(String id) {
 		if (Global.OAuthAccessToken != null) {
 			try {
-				return facebook.getPostComments(id, (new Reading()).limit(1000));
+				return facebook
+						.getPostComments(id, (new Reading()).limit(1000));
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
 		}
 		return null;
 	}
-	
-	public ResponseList<Like> getLikes(String id){
+
+	public ResponseList<Like> getLikes(String id) {
 		if (Global.OAuthAccessToken != null) {
 			try {
 				return facebook.getPostLikes(id, (new Reading()).limit(1000));
@@ -345,6 +465,17 @@ public class FacebookManager {
 			}
 		}
 		return null;
+	}
+
+	public int getLikesCount(String id) {
+		try {
+			return facebook.getPostLikes(id,
+					(new Reading().fields("id")).limit(1000)).size();
+		} catch (FacebookException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return -1;
 	}
 
 	public URL getGroupPictureURL(String groupId) {

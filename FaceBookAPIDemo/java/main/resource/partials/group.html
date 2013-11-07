@@ -2,9 +2,18 @@
 	<div class="span4">
 		<h4>Group:</h4>
 		<div ng-repeat="item in listGroups | startFrom:(currentPage-1)*pageSize | limitTo:pageSize">
-			<button class="btn btn-link btn-large" ng-click="getGroupFeedsBefore(0, item)">{{item.name}}</button>
-			<hr>
+			<button class="btn btn-link btn-small" ng-click="getGroupFeedsBefore(0, item)">{{item.name}}</button>
 		</div>
+		<h4>Get feeds between:</h4>
+		<div class="row-fluid">
+			From: <input type="text" class="input-small"
+				ng-model="datepicker.from" bs-datepicker date-format="yyyy-mm-dd"
+				value="{{ datepicker.from | date:'dd-MM-yyyy' }}"> To: <input
+				type="text" class="input-small" ng-model="datepicker.to"
+				bs-datepicker date-format="yyyy-mm-dd"
+				value="{{ datepicker.to | date:'dd-MM-yyyy' }}">			
+		</div>
+		<button class="btn btn-primary" ng-click="getNewFeeds()" >GetFeeds</button>
 		<h4>Sort by:</h4>
 		<div class="btn-group">
 			<button class="btn btn-primary" ng-show="selectedGroup!=null" ng-click="sortByLikes()" ng-disabled="predicate=='-likes.length'">Likes</button>
@@ -23,7 +32,7 @@
 				<ul class="media-list">
 					<li class="media">
 						<a class="pull-left" href="http://www.facebook.com/{{feed.from.id}}"> 
-							<img class="lazy  media-object" ng-src="{{feed.userAva}}" data-original="{{feed.userAva}}" alt="" width="68" height="68" style="display: inline-block;"></img>
+							<img class="lazy  media-object" ng-src="https://graph.facebook.com/{{feed.from.id}}/picture?type=square" data-original="{{feed.from.id 	}}" alt="" width="68" height="68" style="display: inline-block;"></img>
 						</a>
 						<div class="media-body">
 							<div class="media-heading comment-info">
@@ -62,6 +71,7 @@
 					</li>
 				</ul>
 			</div>
+		
 		</div>
 	</div>
 </div>

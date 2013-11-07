@@ -16,7 +16,7 @@ import facebook4j.ResponseList;
 /**
  * Created the 5/10/13.
  * 
- * @author <a href="mailto:jbardin@tech-arts.com">Jonathan Bardin</a>
+ * @author Thanh Toan
  */
 public class Tools {
 

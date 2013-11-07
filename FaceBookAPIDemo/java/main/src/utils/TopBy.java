@@ -1,10 +1,10 @@
 package utils;
 
 import java.util.HashMap;
-
-import facebook4j.Post;
-import facebook4j.ResponseList;
+import java.util.List;
+import java.util.TreeMap;
 
 public interface TopBy {
-	void doGet(ResponseList<Post> posts, HashMap<String, Integer> map);
+	void doGet(TreeMap treeMap, String gId, String from,
+			String to);
 }

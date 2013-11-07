@@ -1,17 +1,26 @@
 'use strict';
 
 var GroupCtrl = (function($scope, Home, Auth, Feed, Photo, Album, $http, User,
-		Page, Group, $location) {
+		Page, Group, $location, ngProgress) {
 
+	/**
+	 * Look at location
+	 */
 	$scope.$on('$locationChangeSuccess', function() {
 		$scope.path = $location.path();
 	});
 
+	/**
+	 * Current user
+	 */
 	$scope.user = {};
 
+	/**
+	 * Init
+	 */
 	window.fbAsyncInit = function() {
 		FB.init({
-			appId : '607212762654727', // App ID
+			appId : '380947045341754', // App ID
 			channelUrl : 'http://localhost:9000/index.html', // Channel File
 			status : true, // check login status
 			xfbml : true,
@@ -26,7 +35,6 @@ var GroupCtrl = (function($scope, Home, Auth, Feed, Photo, Album, $http, User,
 							if (response.status === 'connected') {
 								console.log("connected");
 								testAPI();
-
 							} else if (response.status === 'not_authorized') {
 								console.log("Login 1");
 
@@ -44,7 +52,6 @@ var GroupCtrl = (function($scope, Home, Auth, Feed, Photo, Album, $http, User,
 												{
 													scope : 'email,user_notes,user_status,publish_actions,user_groups,user_likes,user_photos,user_about_me,user_birthday,user_friends,user_hometown,user_location,user_videos,create_note,manage_friendlists,photo_upload,read_requests,share_item,export_stream,manage_notifications,publish_stream,read_mailbox,read_stream,video_upload,manage_pages,read_friendlists,read_page_mailboxes,status_update,user_events,page'
 												});
-
 							} else {
 								FB
 										.login(
@@ -67,19 +74,16 @@ var GroupCtrl = (function($scope, Home, Auth, Feed, Photo, Album, $http, User,
 	function testAPI() {
 		console.log('Welcome!  Fetching your information.... ');
 		FB.api('/me', function(response) {
-
 			$scope.user = response;
 			console.log('Good to see you, ' + response.name + '.');
 			$scope.getGroups();
 		});
 		FB.getLoginStatus(function(response) {
-			console.log("-------------------------------");
 			if (response.status === 'connected') {
 				$scope.token = response.authResponse.accessToken;
 				Auth.setToken({
 					token : response.authResponse.accessToken
 				}, function(data) {
-
 					console.log("success");
 				}, function(response) {
 					console.log("fail");
@@ -93,7 +97,12 @@ var GroupCtrl = (function($scope, Home, Auth, Feed, Photo, Album, $http, User,
 		});
 	}
 
+	/**
+	 * Get all group
+	 */
 	$scope.getGroups = function() {
+		ngProgress.reset();
+		ngProgress.start();
 		Group.getGroups({
 
 		}, function(data) {
@@ -105,40 +114,20 @@ var GroupCtrl = (function($scope, Home, Auth, Feed, Photo, Album, $http, User,
 			$scope.numberOfPages = Math.ceil($scope.listGroups.length
 					/ $scope.pageSize);
 
-			console.log("success");
+			ngProgress.complete();
 		}, function(response) {
 			console.log("error");
 		});
 	}
 
+	// List of groups
 	$scope.listGroups = [];
+
 	// current page
 	$scope.currentPage = 1;
-
 	// number of items per page
-	$scope.pageSize = 5;
+	$scope.pageSize = 10;
 	$scope.numberOfPages = 0;
-
-	$scope.getGroup = function(id) {
-
-		Group.getGroups({
-			id : id
-		}, function(data) {
-			console.log("success");
-		}, function(response) {
-			console.log("error");
-		});
-	}
-
-	$scope.getGroupMembers = function(id) {
-		Group.getGroupMembers({
-			id : id
-		}, function(data) {
-			console.log("success");
-		}, function(response) {
-			console.log("error");
-		});
-	}
 
 	$scope.predicate = '-comments.length';
 
@@ -150,48 +139,58 @@ var GroupCtrl = (function($scope, Home, Auth, Feed, Photo, Album, $http, User,
 		$scope.predicate = '-comments.length';
 	}
 
-	$scope.getGroupFeeds = function(id) {
-		Group.getGroupFeeds({
-			id : id
-		}, function(data) {
-			$scope.listFeed = data;
-			console.log(data);
-			console.log("success");
-		}, function(response) {
-			console.log("error");
-		});
-	}
-
 	$scope.selectGroup = function(group) {
 		$scope.selectedGroup = group;
 	}
 
+	/**
+	 * Get feeds before ...
+	 */
 	$scope.getGroupFeedsBefore = function(date, group) {
+
+		// ngProgress.start();
+		if ($scope.isLoading && $scope.selectedGroup != null) {
+			return;
+		}
+
 		if (group == null && group == undefined) {
 			return;
 		}
 
+		console.log("-------load more-----------");
 		if (date === 0) {
+			ngProgress.reset();
+			ngProgress.start();
+			$scope.isLoading = true;
 			$scope.selectedGroup = group;
 			Group.getGroupFeedsBefore({
 				id : group.id,
-				par1 : (new Date()).toDateString()
+				par1 : $scope.datepicker.from.toDateString(),
+				after : $scope.datepicker.to.toDateString()
 			}, function(data) {
 				$scope.listFeed = data;
 				$scope.lastestCreatedTime = data[data.length - 1].createdTime;
+				ngProgress.complete();
+				$scope.isLoading = false;
 				console.log("success");
 			}, function(response) {
 				console.log("error");
 			});
 		} else {
+			ngProgress.reset();
+			ngProgress.start();
+			$scope.isLoading = true;
 			Group.getGroupFeedsBefore({
 				id : group.id,
-				par1 : (new Date(date)).toDateString()
+				par1 : $scope.datepicker.from.toDateString(),
+				after : $scope.lastestCreatedTime
 			}, function(data) {
 				for ( var i = 0; i < data.length; i++) {
 					$scope.listFeed.push(data[i]);
 				}
 				$scope.lastestCreatedTime = data[data.length - 1].createdTime;
+				ngProgress.complete();
+				$scope.isLoading = false;
 				console.log("success");
 			}, function(response) {
 				console.log("error");
@@ -199,16 +198,23 @@ var GroupCtrl = (function($scope, Home, Auth, Feed, Photo, Album, $http, User,
 		}
 
 	}
-
-	$scope.getGroupFeedsBetween = function(group, from, to) {
+	
+	$scope.getNewFeeds = function() {
+		$scope.getGroupFeedsBefore(0, $scope.selectedGroup);
+	}
+	
+	/**
+	 * Get feeds between ... ...
+	 */
+	$scope.getGroupFeedsBetween = function(group) {
 		if (group == null && group == undefined) {
 			return;
 		}
 
 		Group.getGroupFeedsBetween({
 			id : group.id,
-			par1 : to,
-			par2 : from
+			par1 : $scope.datepicker.to,
+			par2 : $scope.datepicker.from
 		}, function(data) {
 			$scope.listFeed = data;
 			// $scope.lastestCreatedTime = data[data.length - 1].createdTime;
@@ -218,55 +224,31 @@ var GroupCtrl = (function($scope, Home, Auth, Feed, Photo, Album, $http, User,
 		});
 	}
 
+	/**
+	 * List statistic
+	 */
 	$scope.listStatistic = [];
-	$scope.getTopPost = function(id) {
-		Group.getTopPost({
-			id : id
-		}, function(data) {
-			// console.log(angular.fromJson(data));
-			$scope.listStatistic = data;
-			console.log("success");
-		}, function(response) {
-			console.log("error");
-		});
+	$scope.selectedTop = "post";
+
+	$scope.getTopPost = function() {
+		$scope.selectedTop = "post";
 	}
 
-	$scope.getTopComment = function(id) {
-		Group.getTopComment({
-			id : id
-		}, function(data) {
-			// console.log(angular.fromJson(data));
-			$scope.listStatistic = data;
-			console.log(data);
-		}, function(response) {
-			console.log("error");
-		});
+	$scope.getTopComment = function() {
+		$scope.selectedTop = "comment";
 	}
 
-	$scope.getTopLiked = function(id) {
-		Group.getTopLiked({
-			id : id
-		}, function(data) {
-			// console.log(angular.fromJson(data));
-			$scope.listStatistic = data;
-			console.log(data);
-		}, function(response) {
-			console.log("error");
-		});
+	$scope.getTopLiked = function() {
+		$scope.selectedTop = "liked";
 	}
 
-	$scope.getTopSpam = function(id) {
-		Group.getTopSpam({
-			id : id
-		}, function(data) {
-			// console.log(angular.fromJson(data));
-			$scope.listStatistic = data;
-			console.log(data);
-		}, function(response) {
-			console.log("error");
-		});
+	$scope.getTopSpam = function() {
+		$scope.selectedTop = "spam";
 	}
 
+	/**
+	 * View comment
+	 */
 	$scope.viewComment = function(feed) {
 		if (feed.commentClick == undefined) {
 			feed.commentClick = true;
@@ -276,20 +258,71 @@ var GroupCtrl = (function($scope, Home, Auth, Feed, Photo, Album, $http, User,
 
 	}
 
-	$scope.like = function(id) {
-		Feed.like({
-			id : id
-		}, function(data) {
+	$scope.datepicker = {
+		from : new Date("2010-01-02T00:00:00.000Z"),
+		to : new Date()
+	};
 
-		}, function(response) {
-
-		});
-	}
-	
-	$scope.datepicker = { from : new Date("2000-01-02T00:00:00.000Z"),
-			to : new Date()};
-	  
-	$scope.cal = function() {		
-		console.log($scope.datepicker);
+	/**
+	 * Statistic
+	 * 
+	 * Get post from ... to ... and analyze
+	 */
+	$scope.getBetween = function() {
+		ngProgress.reset();
+		ngProgress.start();
+		switch ($scope.selectedTop) {
+		case "post":
+			console.log("post" + $scope.datepicker.from.toUTCString());
+			Group.getTopPost({
+				id : $scope.selectedGroup.id,
+				par1 : $scope.datepicker.from.toUTCString(),
+				after : $scope.datepicker.to.toUTCString()
+			}, function(data) {
+				$scope.listStatistic = data;
+				ngProgress.complete();
+			}, function(response) {
+				console.log("error");
+			});
+			break;
+		case "comment":
+			Group.getTopComment({
+				id : $scope.selectedGroup.id,
+				par1 : $scope.datepicker.from.toUTCString(),
+				after : $scope.datepicker.to.toUTCString()
+			}, function(data) {
+				$scope.listStatistic = data;
+				ngProgress.complete();
+			}, function(response) {
+				console.log("error");
+			});
+			break;
+		case "liked":
+			Group.getTopLiked({
+				id : $scope.selectedGroup.id,
+				par1 : $scope.datepicker.from.toUTCString(),
+				after : $scope.datepicker.to.toUTCString()
+			}, function(data) {
+				$scope.listStatistic = data;
+				ngProgress.complete();
+			}, function(response) {
+				console.log("error");
+			});
+			break;
+		case "spam":
+			Group.getTopSpam({
+				id : $scope.selectedGroup.id,
+				par1 : $scope.datepicker.from.toUTCString(),
+				after : $scope.datepicker.to.toUTCString()
+			}, function(data) {
+				$scope.listStatistic = data;
+				ngProgress.complete();
+			}, function(response) {
+				console.log("error");
+			});
+			break;
+		default:
+			break;
+		}
 	}
 });

@@ -2,37 +2,40 @@
 	<div class="span4">
 		<div
 			ng-repeat="item in listGroups | startFrom:(currentPage-1)*pageSize | limitTo:pageSize">
-			<button class="btn btn-link btn-large" ng-click="selectGroup(item)">{{item.name}}</button>
-			<hr>
+			<button class="btn btn-link btn-small" ng-click="selectGroup(item)">{{item.name}}</button>
+		</div>
+		<div ng-show="numberOfPages != 0">
+			<pagination num-pages="numberOfPages" max-size="3" current-page="currentPage" instance="wildPagination" previous-text="<<" next-text=">>"></pagination>
 		</div>
 	</div>
 	<div class="span8">
 		<h3 ng-show="selectedGroup == null">Please choose a Group</h3>
 		<h3>{{selectedGroup.name}}</h3>
-		<div class="row-fluid">
+		<div class="row-fluid" ng-show="selectedGroup != null">
 			<div class="btn-group">
-				<button class="btn btn-success" ng-disabled="selectedGroup == null"
-					ng-click="getTopPost(selectedGroup.id)">Top Post</button>
-				<button class="btn btn-success" ng-disabled="selectedGroup == null"
-					ng-click="getTopComment(selectedGroup.id)">Top Comment</button>
-				<button class="btn btn-success" ng-disabled="selectedGroup == null"
-					ng-click="getTopLiked(selectedGroup.id)">Top Liked</button>
-				<button class="btn btn-success" ng-disabled="selectedGroup == null"
-					ng-click="getTopSpam(selectedGroup.id)">Top Spam</button>
+				<button class="btn btn-success" ng-disabled="selectedTop == 'post'"
+					ng-click="getTopPost()" >Top Post</button>
+				<button class="btn btn-success" ng-disabled="selectedTop == 'comment'"
+					ng-click="getTopComment()">Top Comment</button>
+				<button class="btn btn-success" ng-disabled="selectedTop == 'liked'"
+					ng-click="getTopLiked()">Top Liked</button>
+				<button class="btn btn-success" ng-disabled="selectedTop == 'spam'"
+					ng-click="getTopSpam()">Top Spam</button>
 			</div>
+			<button ng-click="getBetween()" class="btn btn-primary" >Analyze</button>
 		</div>
 		<br>
-		<div class="row-fluid">
+		<div class="row-fluid" ng-show="selectedGroup != null">
 			From: <input type="text" class="input-small"
 				ng-model="datepicker.from" bs-datepicker date-format="yyyy-mm-dd"
 				value="{{ datepicker.from | date:'dd-MM-yyyy' }}"> To: <input
 				type="text" class="input-small" ng-model="datepicker.to"
 				bs-datepicker date-format="yyyy-mm-dd"
 				value="{{ datepicker.to | date:'dd-MM-yyyy' }}">
-			<button ng-click="cal()" class="btn" >Analyze</button>
+			
 		</div>
 		<hr>
-		<div ng-show="listStatistic.count > 0">
+		<div ng-show="selectedGroup != null">
 			<table class="table table-striped">
 				<h3>TOP 10</h3>
 				<thead>
@@ -60,9 +63,4 @@
 			</table>
 		</div>
 	</div>
-</div>
-
-<div ng-show="numberOfPages != 0">
-	<pagination num-pages="numberOfPages" current-page="currentPage"
-		instance="wildPagination" previous-text="<<" next-text=">>"></pagination>
 </div>

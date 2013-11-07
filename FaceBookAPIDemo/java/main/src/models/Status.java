@@ -12,11 +12,9 @@ public class Status {
 	public String id;
 	public String type;
 	public String message;
-	public String name;
 	public URL url;
 	public PagableList<Like> likes;
 	public PagableList<Comment> comments;
 	public Date createdTime;
 	public Category from;
-	public URL userAva;
 }

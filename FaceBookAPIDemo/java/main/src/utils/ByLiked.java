@@ -1,40 +1,37 @@
 package utils;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 
-import facebook4j.Comment;
-import facebook4j.Post;
-import facebook4j.ResponseList;
+import managers.FacebookManager;
 
-public class ByLiked implements TopBy{
-
+public class ByLiked implements TopBy {
 	@Override
-	public void doGet(ResponseList<Post> posts, HashMap<String, Integer> map) {
+	public void doGet(TreeMap treeMap, String gId, String from, String to) {
 		// TODO Auto-generated method stub
-		//Duyet tung post
-		for (Post post : posts) {
-			//Xet user hien tai co trong map chua
-			String userId = post.getFrom().getId();
-			if (!map.containsKey(userId)) {
-				//chua thi put vo voi so luot like
-				map.put(userId, post.getLikes().size());
+		FacebookManager facebookManager = new FacebookManager();
+		List<models.Post> posts = facebookManager.getPostsFQL(gId, from, to);
+		for (models.Post post : posts) {
+			String userId = post.actor_id;
+			int count = post.likes.findValue("count").asInt();
+			if (!treeMap.containsKey(userId)) {
+				treeMap.put(userId, count);
 			} else {
-				//co roi thi tang so luot like
-				int value = map.get(userId) + post.getLikes().size();
-				map.put(userId, value);
+				int value = (int) treeMap.get(userId) + count;
+				treeMap.put(userId, value);
 			}
-			
-			List<Comment> comments = post.getComments();
-			
-			for (Comment comment : comments) {
-				String uId = comment.getFrom().getId();
-				if (!map.containsKey(uId)) {
-					map.put(uId, comment.getLikeCount());
-				} else {
-					int value = map.get(uId) + comment.getLikeCount();
-					map.put(uId, value);
-				}
+		}
+
+		List<models.Comment> comments = facebookManager.getPostsCommentsFQL(
+				gId, from, to);
+		for (models.Comment comment : comments) {
+			String userId = comment.fromid;
+			int count = comment.likes;
+			if (!treeMap.containsKey(userId)) {
+				treeMap.put(userId, count);
+			} else {
+				int value = (int) treeMap.get(userId) + count;
+				treeMap.put(userId, value);
 			}
 		}
 	}
