@@ -4,7 +4,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -21,8 +20,6 @@ import utils.ByComment;
 import utils.ByLiked;
 import utils.ByPost;
 import utils.BySpam;
-import utils.Compare;
-import utils.CompareSpamer;
 import utils.Tools;
 import utils.TopBy;
 import facebook4j.Group;
@@ -114,6 +111,7 @@ public class GroupController extends Controller {
 		return ok(Tools.listToJson(res));
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static Result getTopSpam(String id, String from, String to) {
 		TreeMap treeMap = new TreeMap();		
 		new BySpam().doGet(treeMap, id, from, to);
@@ -142,6 +140,7 @@ public class GroupController extends Controller {
 		return ok(Tools.listToJson(res));
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private static List<StatisticInfo> getTop(String id, TopBy t, String from,
 			String to) {
 		TreeMap treeMap = new TreeMap();		
@@ -171,6 +170,7 @@ public class GroupController extends Controller {
 		return res;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private static Map sortByComparator(Map unsortMap) {
 
 		List list = new LinkedList(unsortMap.entrySet());
@@ -193,6 +193,7 @@ public class GroupController extends Controller {
 		return sortedMap;
 	}
 
+	@SuppressWarnings("rawtypes")
 	public static void printMap(Map<String, String> map) {
 		for (Map.Entry entry : map.entrySet()) {
 			System.out.println("Key : " + entry.getKey() + " Value : "
@@ -200,6 +201,7 @@ public class GroupController extends Controller {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private static <T> List<T> get10(List<T> res) {
 		List<T> res1 = new ArrayList<T>();
 		for (int i = 0; i < res.size(); i++) {

@@ -7,7 +7,7 @@ import managers.FacebookManager;
 
 public class ByLiked implements TopBy {
 	@Override
-	public void doGet(TreeMap treeMap, String gId, String from, String to) {
+	public void doGet(TreeMap<String, Integer> treeMap, String gId, String from, String to) {
 		// TODO Auto-generated method stub
 		FacebookManager facebookManager = new FacebookManager();
 		List<models.Post> posts = facebookManager.getPostsFQL(gId, from, to);

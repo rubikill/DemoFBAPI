@@ -6,14 +6,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.TimeZone;
-
-import org.h2.constant.SysProperties;
-import org.joda.time.DateTime;
 
 import utils.Global;
 import utils.Tools;
@@ -33,7 +28,6 @@ import facebook4j.Reading;
 import facebook4j.ResponseList;
 import facebook4j.User;
 import facebook4j.conf.ConfigurationBuilder;
-import facebook4j.internal.org.json.JSONArray;
 
 public class FacebookManager {
 

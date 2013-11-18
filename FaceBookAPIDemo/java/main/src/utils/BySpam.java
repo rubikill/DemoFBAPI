@@ -9,19 +9,18 @@ import java.util.TreeMap;
 import managers.FacebookManager;
 import models.StatisticInfo;
 
-public class BySpam implements TopBy {
+public class BySpam {
 	
 	//Liked/(post + comment)
-	@Override
-	public void doGet(TreeMap treeMap, String gId, String from, String to) {
+	public void doGet(TreeMap<String, Float> treeMap, String gId, String from, String to) {
 		// TODO Auto-generated method stub
 		FacebookManager facebookManager = new FacebookManager();
 		List<models.Post> posts = facebookManager.getPostsFQL(gId, from, to);
 		List<models.Comment> comments = facebookManager.getPostsCommentsFQL(
 				gId, from, to);
 
-		TreeMap<String, Integer> treePostComment = new TreeMap<>();
-		TreeMap<String, Integer> treeLiked = new TreeMap<>();
+		TreeMap<String, Integer> treePostComment = new TreeMap<String, Integer>();
+		TreeMap<String, Integer> treeLiked = new TreeMap<String, Integer>();
 
 		//Tong so post
 		//For tung post put user
@@ -61,23 +60,26 @@ public class BySpam implements TopBy {
 			}
 		}
 
+		@SuppressWarnings("rawtypes")
 		Iterator iter = treePostComment.entrySet().iterator();
+		@SuppressWarnings("unused")
 		List<StatisticInfo> res = new ArrayList<StatisticInfo>();
 		while (iter.hasNext()) {
+			@SuppressWarnings("rawtypes")
 			Map.Entry mEntry = (Map.Entry) iter.next();
 			String userId = (String)mEntry.getKey();
 			if (treeLiked.containsKey(userId)) {
 				float value = treeLiked.get(mEntry.getKey()).floatValue()
 						/ Float.parseFloat(mEntry.getValue().toString());
-				treeMap.put(mEntry.getKey(), value);
+				treeMap.put(mEntry.getKey().toString(), value);
 			} else {
-				treeMap.put(mEntry.getKey(), 0);
+				treeMap.put(mEntry.getKey().toString(), (float) 0);
 			}
 		}
 	}
 	
 	public static <T1, T2> void  printMap(Map<T1, T2> map) {
-		for (Map.Entry entry : map.entrySet()) {
+		for (@SuppressWarnings("rawtypes") Map.Entry entry : map.entrySet()) {
 			System.out.println("Key : " + entry.getKey() + " Value : "
 					+ entry.getValue());
 		}

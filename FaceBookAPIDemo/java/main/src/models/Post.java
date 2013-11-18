@@ -4,8 +4,6 @@ import java.util.List;
 
 import org.codehaus.jackson.JsonNode;
 
-import facebook4j.Like;
-
 public class Post {
 	//The ID of the post
 	public String post_id;

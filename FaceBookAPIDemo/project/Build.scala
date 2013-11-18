@@ -12,7 +12,9 @@ object ApplicationBuild extends Build {
     javaCore,
     javaJdbc,
     javaEbean,
-    "org.facebook4j" % "facebook4j-core" % "2.0.0"
+    "org.facebook4j" % "facebook4j-core" % "2.0.0",
+    "org.jsoup" % "jsoup" % "1.7.2",
+    "net.java.dev.rome" % "rome" % "1.0.0"
   )
 
   val main = play.Project(appName, appVersion, appDependencies).settings(
