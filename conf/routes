@@ -1,0 +1,44 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                                      controllers.Assets.at(path="/java/main/resource", file="index.html")
+
+GET    /status                                 controllers.StatusController.getStatus()
+POST   /status/:content                        controllers.StatusController.postStatus(content: String)
+
+GET    /album                       		   controllers.AlbumController.getAlbums()
+GET    /album/:id                   		   controllers.AlbumController.getAlbum(id: String)
+
+GET    /photo/:photo                		   controllers.PhotoController.getPhoto(photo: String)
+POST   /photo/:photo                		   controllers.PhotoController.postPhoto(photo: String)
+
+GET    /feeds                       		   controllers.FeedController.getFeed()
+POST   /feeds/:id/like              		   controllers.LikeController.like(id: String)
+POST   /feeds/:id/unlike            		   controllers.LikeController.unLike(id: String)
+
+POST   /auth/:token                            controllers.Application.setToken(token: String)
+
+GET    /user/:id                               controllers.UserController.getUser(id: String)
+
+GET    /page                                   controllers.PageController.getPages()
+#GET    /page/:id                    controllers.Application.getPage(id: String)
+
+GET    /group                                  		controllers.GroupController.getGroups()
+GET    /group/:id                              		controllers.GroupController.getGroup(id: String)
+GET    /group/:id/members                      		controllers.GroupController.getGroupMember(id: String)
+GET    /group/:id/feeds                        		controllers.GroupController.getGroupFeed(id: String)
+GET    /group/:id/feeds/before/:to/after/:from 		controllers.GroupController.getGroupFeedBetween(id: String, from: String, to: String)
+GET    /group/:id/feeds/before/:from/:to     		controllers.GroupController.getGroupFeedBefore(id: String, from: String, to: String)
+GET    /group/:id/statistic/post/:from/:to     		controllers.GroupController.getTopPost(id: String, from: String, to: String)
+GET    /group/:id/statistic/comment/:from/:to  		controllers.GroupController.getTopComment(id: String, from: String, to: String)
+GET    /group/:id/statistic/liked/:from/:to    		controllers.GroupController.getTopLiked(id: String, from: String, to: String)
+GET    /group/:id/statistic/spam/:from/:to     		controllers.GroupController.getTopSpam(id: String, from: String, to: String)
+GET    /group/:id/cover                        		controllers.GroupController.getGroupPictureURL(id: String)
+
+GET    /rss/:id/:tableid                      		controllers.RSSController.getRssFromFIT(id: String, tableid: String)
+GET    /rss/:id/:tableid/json                 		controllers.RSSController.getRssFromFITJson(id: String, tableid: String)
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /*file                      controllers.Assets.at(path="/java/main/resource", file)
