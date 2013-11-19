@@ -1,13 +1,15 @@
 'use strict';
 
-var app = angular
-		.module('app', [ 'app.services', 'scroll', 'infinite-scroll' , 'ngProgress']);
+var app = angular.module('app', [ 'app.services', 'scroll', 'infinite-scroll',
+		'ngProgress' ]);
 
 app.config([ '$routeProvider', function($routeProvider, $rootScope) {
 	$routeProvider.when('/group', {
 		templateUrl : 'partials/group.html'
 	}).when('/statistic', {
 		templateUrl : 'partials/statistic.html'
+	}).when('/fitfeed', {
+		templateUrl : 'partials/fitfeed.html'
 	}).otherwise({
 		redirectTo : ('/group')
 	});
@@ -51,21 +53,21 @@ app.directive('bsDatepicker', function() {
 				if (typeof (value) === "string" && value.length > 0) {
 					options = angular.fromJson(value);
 				}
-				
-				if(angular.equals(attrs.name, "startDate")){
+
+				if (angular.equals(attrs.name, "startDate")) {
 					var current = new Date();
 					var startStr = current.getFullYear() + "-"
-					+ (current.getMonth() <= 8 ? "0" : "")
-					+ (current.getMonth() + 1) + "-"
-					+ (current.getDate() <= 9 ? "0" : "")
-					+ current.getDate();
-					
+							+ (current.getMonth() <= 8 ? "0" : "")
+							+ (current.getMonth() + 1) + "-"
+							+ (current.getDate() <= 9 ? "0" : "")
+							+ current.getDate();
+
 					$('#startDate').datepicker('setStartDate', startStr);
 					$('#endDate').datepicker('setStartDate', startStr);
 				}
-				
-				
-				//element.datepicker('setLanguage', $scope.currentLanguage.localize.split('-')[0]);
+
+				// element.datepicker('setLanguage',
+				// $scope.currentLanguage.localize.split('-')[0]);
 				// datepicker at the bottom search
 				if (attrs.placement === "top") {
 					element.on('show', function() {
@@ -74,17 +76,15 @@ app.directive('bsDatepicker', function() {
 						picker.addClass('datepicker-dropup');
 
 						var offset = element.offset();
-						picker
-								.css({
-									top : offset.top
-											- picker.outerHeight(true) - 3,
-									left : offset.left
+						picker.css({
+							top : offset.top - picker.outerHeight(true) - 3,
+							left : offset.left
 
-								});
+						});
 					});
 
 				}
-				
+
 				return element.datepicker(options)
 						.on('changeDate', updateModel);
 			});

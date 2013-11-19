@@ -1,7 +1,7 @@
 'use strict';
 
 var GroupCtrl = (function($scope, Home, Auth, Feed, Photo, Album, $http, User,
-		Page, Group, $location, ngProgress) {
+		Page, Group, $location, ngProgress, RSS) {
 
 	/**
 	 * Look at location
@@ -324,5 +324,69 @@ var GroupCtrl = (function($scope, Home, Auth, Feed, Photo, Album, $http, User,
 		default:
 			break;
 		}
+	}
+
+	$scope.listFitFeed = [{
+		name : "Thông tin chung",
+		id : "57",
+		tableId : "615"
+	},
+	{
+		name : "Thông báo hệ CQui",
+		id : "58",
+		tableId : "652"
+	},
+	{
+		name : "Thông báo hệ HCĐH",
+		id : "261",
+		tableId : "655"
+	},
+	{
+		name : "Thông báo hệ Tại chức",
+		id : "260",
+		tableId : "654"
+	},
+	{
+		name : "Thông báo hệ Cao đẳng",
+		id : "263",
+		tableId : "657"
+	},
+	{
+		name : "Thông báo Sau đại học",
+		id : "264",
+		tableId : "658"
+	},
+	{
+		name : "Thông tin tuyển dụng",
+		id : "265",
+		tableId : "659"
+	},
+	{
+		name : "Thông tin Hội thảo - Hội nghị",
+		id : "493",
+		tableId : "955"
+	},
+	{
+		name : "Tin tức thời sự CNTT",
+		id : "266",
+		tableId : "660"
+	}];
+
+	$scope.listRss = [];
+
+	$scope.getRss = function (id, tableId) {
+		ngProgress.reset();
+		ngProgress.start();
+		$scope.listRss = [];
+		RSS.getRSSJson({
+			id : id,
+			tableid : tableId
+		}, function (data) {
+			$scope.listRss = data;
+			ngProgress.complete();
+		}, function (response) {
+			console.log(response);
+			ngProgress.complete();
+		});
 	}
 });

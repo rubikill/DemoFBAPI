@@ -206,3 +206,24 @@ appservice.factory('Group', function($resource) {
 		}
 	});
 });
+
+
+appservice.factory('RSS', function($resource) {
+	return $resource('/rss/:id/:tableid/:type', {
+		id : "@id",
+		tableid : "@tableid",
+		type : "@type"
+	}, {
+		getRSS : {
+			method : 'GET'
+		},
+		getRSSJson : {
+			method : 'GET',
+			isArray : true,
+			params : {
+				type : "json"
+			}
+		}
+	});
+});
+

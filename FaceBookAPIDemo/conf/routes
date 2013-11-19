@@ -37,5 +37,8 @@ GET    /group/:id/statistic/liked/:from/:to    		controllers.GroupController.get
 GET    /group/:id/statistic/spam/:from/:to     		controllers.GroupController.getTopSpam(id: String, from: String, to: String)
 GET    /group/:id/cover                        		controllers.GroupController.getGroupPictureURL(id: String)
 
+GET    /rss/:id/:tableid                      		controllers.RSSController.getRssFromFIT(id: String, tableid: String)
+GET    /rss/:id/:tableid/json                 		controllers.RSSController.getRssFromFITJson(id: String, tableid: String)
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /*file                      controllers.Assets.at(path="/java/main/resource", file)

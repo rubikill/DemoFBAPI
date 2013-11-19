@@ -1,0 +1,27 @@
+<div class="row-fluid">
+	<div class="span4">
+		<h4>THÔNG BÁO & TIN TỨC</h4>
+		<div ng-repeat="item in listFitFeed">
+			<button class="btn btn-link btn-small" ng-click="getRss(item.id, item.tableId)">{{item.name}}</button>
+		</div>
+	</div>
+	<div class="span8">
+		<table class="table table-striped">
+			<h3>RSS</h3>
+			<thead>
+				<tr>
+					<th style="width: 10%">STT</th>
+					<th style="width: 20%">Date</th>
+					<th style="width: 70%">Title</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="item in listRss">
+					<td style="width: 10%">{{$index + 1}}</td>
+					<td style="width: 20%">{{item.pubDate.text}}</td>
+					<td style="width: 70%">{{item.title.title}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
