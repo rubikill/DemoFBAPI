@@ -75,6 +75,9 @@ var GroupCtrl = (function($scope, Home, Auth, Feed, Photo, Album, $http, User,
             $scope.getGroups();
 
             console.log(document.referrer);
+
+            console.log(window.parent.document.referrer);
+
         });
         FB.getLoginStatus(function(response) {
             if (response.status === 'connected') {
@@ -380,8 +383,8 @@ var GroupCtrl = (function($scope, Home, Auth, Feed, Photo, Album, $http, User,
     }
 
     function getRef() {
-    	
-    	//setTimeout(getRef(), 3000);
+
+        //setTimeout(getRef(), 3000);
     }
 
     $(window).load(function() {
