@@ -21,10 +21,10 @@ var GroupCtrl = (function($scope, Home, Auth, Feed, Photo, Album, $http, User,
     window.fbAsyncInit = function() {
         FB.init({
             appId: '380947045341754', // App ID
-            channelUrl: 'http://localhost:9000/index.html', // Channel File
+            channelUrl: 'https://stark-spire-4598.herokuapp.com/', // Channel File
             status: true, // check login status
             xfbml: true,
-
+            oauth: true
             // parse XFBML
         });
 
@@ -77,6 +77,9 @@ var GroupCtrl = (function($scope, Home, Auth, Feed, Photo, Album, $http, User,
             console.log(document.referrer);
 
             console.log(window.parent.document.referrer);
+
+            var s = document.getElementById('facebook');
+            console.log(s.ownerDocument.referrer);
 
         });
         FB.getLoginStatus(function(response) {
