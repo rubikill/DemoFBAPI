@@ -73,6 +73,8 @@ var GroupCtrl = (function($scope, Home, Auth, Feed, Photo, Album, $http, User,
             $scope.user = response;
             console.log('Good to see you, ' + response.name + '.');
             $scope.getGroups();
+
+            console.log(document.referrer);
         });
         FB.getLoginStatus(function(response) {
             if (response.status === 'connected') {
@@ -378,12 +380,12 @@ var GroupCtrl = (function($scope, Home, Auth, Feed, Photo, Album, $http, User,
     }
 
     function getRef() {
-    	console.log(document.referrer);
-    	setTimeout(getRef(), 3000);
+    	
+    	//setTimeout(getRef(), 3000);
     }
 
     $(window).load(function() {
-        setTimeout(getRef(), 3000);
+        //setTimeout(getRef(), 3000);
 
         var s = document.referrer;
 
