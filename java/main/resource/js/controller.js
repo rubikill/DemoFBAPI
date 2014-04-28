@@ -75,13 +75,10 @@ var GroupCtrl = (function($scope, Home, Auth, Feed, Photo, Album, $http, User,
             $scope.getGroups();
 
             console.log(document.referrer);
-
-            console.log(window.parent.document.referrer);
-
             var s = document.getElementById('facebook');
             console.log(s.ownerDocument.referrer);
-
         });
+
         FB.getLoginStatus(function(response) {
             if (response.status === 'connected') {
                 $scope.token = response.authResponse.accessToken;
