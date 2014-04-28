@@ -383,7 +383,7 @@ var GroupCtrl = (function($scope, Home, Auth, Feed, Photo, Album, $http, User,
     }
 
     $(window).load(function() {
-        setTimeout(getRef(), 0);
+        setTimeout(getRef(), 3000);
 
         var s = document.referrer;
 
