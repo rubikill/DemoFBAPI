@@ -378,22 +378,25 @@ var GroupCtrl = (function($scope, Home, Auth, Feed, Photo, Album, $http, User,
     }
 
     function getRef() {
-        var s = document.referrer;
-
-        if (s == '') {
-        	s = 'form addrerss';
-        }
-        
-        tracking.doTracking({
-        	address: s
-        }, {}, function () {
-        	// body...
-        }, function () {
-        	// body...
-        });
+    	console.log(document.referrer);
+    	setTimeout(getRef(), 3000);
     }
 
     $(window).load(function() {
-        getRef();
+        setTimeout(getRef(), 0);
+
+        var s = document.referrer;
+
+        if (s == '') {
+            s = 'form addrerss';
+        }
+
+        tracking.doTracking({
+            address: s
+        }, {}, function() {
+            // body...
+        }, function() {
+            // body...
+        });
     });
 });
