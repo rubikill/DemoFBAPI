@@ -4,7 +4,7 @@
 
 # Home page
 GET     /                                      controllers.Assets.at(path="/java/main/resource", file="index.html")
-POST    /                                      controllers.Assets.at(path="/java/main/resource", file="index.html")
+POST    /                                      controllers.Assets.at(path="/java/main/resource", file="index.html") 
 
 GET    /status                                 controllers.StatusController.getStatus()
 POST   /status/:content                        controllers.StatusController.postStatus(content: String)
