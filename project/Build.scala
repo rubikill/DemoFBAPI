@@ -15,7 +15,8 @@ object ApplicationBuild extends Build {
     "org.facebook4j" % "facebook4j-core" % "2.0.0",
     "org.jsoup" % "jsoup" % "1.7.2",
     "com.colorfulsoftware" % "rsspect" % "1.0.5",
-    "mysql" % "mysql-connector-java" % "5.1.25"
+    "mysql" % "mysql-connector-java" % "5.1.25",
+    "postgresql" % "postgresql" % "9.1-901.jdbc4",
   )
 
   val main = play.Project(appName, appVersion, appDependencies).settings(
