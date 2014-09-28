@@ -4,19 +4,23 @@
 # --- !Ups
 
 create table tracking (
-  id                        integer auto_increment not null,
+  id                        integer not null,
   address                   varchar(255),
   constraint pk_tracking primary key (id))
 ;
+
+create sequence tracking_seq;
 
 
 
 
 # --- !Downs
 
-SET FOREIGN_KEY_CHECKS=0;
+SET REFERENTIAL_INTEGRITY FALSE;
 
-drop table tracking;
+drop table if exists tracking;
 
-SET FOREIGN_KEY_CHECKS=1;
+SET REFERENTIAL_INTEGRITY TRUE;
+
+drop sequence if exists tracking_seq;
 
