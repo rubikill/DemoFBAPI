@@ -4,7 +4,6 @@
 
 # Home page
 GET     /                                      controllers.Assets.at(path="/java/main/resource", file="index.html")
-POST    /                                      controllers.Assets.at(path="/java/main/resource", file="index.html") 
 
 GET    /status                                 controllers.StatusController.getStatus()
 POST   /status/:content                        controllers.StatusController.postStatus(content: String)
@@ -40,9 +39,6 @@ GET    /group/:id/cover                        		controllers.GroupController.get
 
 GET    /rss/:id/:tableid                      		controllers.RSSController.getRssFromFIT(id: String, tableid: String)
 GET    /rss/:id/:tableid/json                 		controllers.RSSController.getRssFromFITJson(id: String, tableid: String)
-
-GET    /tracking                      				controllers.TrackingController.getAll()
-POST   /tracking/:address                 			controllers.TrackingController.createTracking(address: String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /*file                      controllers.Assets.at(path="/java/main/resource", file)

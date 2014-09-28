@@ -3,7 +3,6 @@
 		<h4>THÔNG BÁO & TIN TỨC</h4>
 		<div ng-repeat="item in listFitFeed">
 			<button class="btn btn-link btn-small" ng-click="getRss(item.id, item.tableId)">{{item.name}}</button>
-			<a href="/rss/{{item.id}}/{{item.tableId}}" target="_brank">RSS</a>
 		</div>
 	</div>
 	<div class="span8">

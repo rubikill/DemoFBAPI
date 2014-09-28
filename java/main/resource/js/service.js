@@ -227,12 +227,3 @@ appservice.factory('RSS', function($resource) {
 	});
 });
 
-appservice.factory('tracking', function($resource) {
-	return $resource('/tracking/:address', {
-		address : "@address"
-	}, {
-		doTracking : {
-			method : 'POST'
-		}
-	});
-});
