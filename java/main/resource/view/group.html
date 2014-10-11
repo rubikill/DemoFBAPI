@@ -1,0 +1,25 @@
+<div class="search">
+<!--     <span class="img-search">
+        <a href="#">
+            <img src="img/iconsearch.png" alt="search name group" />
+        </a>
+    </span> -->
+    <span>
+        <input placeholder="Search group" ng-model="query" />
+    </span>
+</div><!-- end of search-->
+<div class="group-list">
+    <div ng-repeat="item in listGroups | filter:query"  class="row group-item">
+        <div class="col-md-9 group-about">
+            <span class="group-avatar">
+                <img src="img/avatar-group.png" alt="avatar group" />
+            </span>
+            <span>{{item.name}}</span>
+        </div>
+        <div class="col-md-3 group-process">
+            <a ng-click="processFeed(item)" class="btngroup color1">Feed</a>
+            <a ng-click="processStatistic(item)" class="btngroup color2">Statistic</a>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div><!-- end of group-list -->

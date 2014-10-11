@@ -1,0 +1,33 @@
+<div class="group-name">
+    <div class="wrap-back">
+        <a href="#/statistic/{{groupId}}">
+            <span>
+                <img src="img/back.png" alt="icon-back">
+            </span>
+            <span>Back</span>
+        </a>
+    </div>
+    <div class="name">
+       Top {{groupBy}} of {{groupName}}
+    </div>
+</div>
+<!-- end group-name -->
+<div class="detail-statistic">
+    <div class="about-list">
+        <table>
+            <tr>
+                <td class="stt title-td">STT</td>
+                <td class="pic title-td">Avatar</td>
+                <td class="name title-td">Name</td>
+                <td class="count title-td">Count</td>
+            </tr>
+            <tr ng-repeat="item in listStatistic">
+                <td>{{$index + 1}}</td>
+                <td><img ng-src="https://graph.facebook.com/{{item.id}}/picture?type=square" alt="avatar" /></td>
+                <td>{{item.name}}</td>
+                <td ng-show="item.count != null">{{item.count}}</td>
+                <td ng-show="item.percent != null">{{item.percent}}</td>
+            </tr>
+        </table>
+    </div>
+</div>

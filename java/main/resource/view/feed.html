@@ -1,0 +1,54 @@
+<div class="group-name">
+    <div class="wrap-back">
+        <a href="#/group">
+            <span>
+                <img src="img/back.png" alt="icon-back">
+            </span>
+            <span>Back</span>
+        </a>
+    </div>
+    <div class="name">
+        {{groupName}}
+    </div>
+</div>
+<!-- end group-name -->
+<div class="group-post">
+
+    <div infinite-scroll='getGroupFeedsBefore(lastestCreatedTime, groupId)' infinite-scroll-distance='0'>
+
+        <div ng-repeat="feed in listFeed" class="post-item">
+            <div class="post-author">
+                <span>
+                    <img ng-src="https://graph.facebook.com/{{feed.from.id}}/picture?type=square" alt="avatar" />
+                </span>
+                <span><a class="name" href="http://www.facebook.com/{{feed.from.id}}">{{feed.from.name}}</a></span>
+            </div>
+
+            <div class="post-time">{{feed.createdTime | date:'dd-MM-yyyy'}}</div>
+
+            <div class="post-about">
+                {{feed.message}}
+            </div>
+
+            <div class="post-process">
+                <span class="iconprocess">{{feed.likes.length}} <img src="img/like.png"></span> -
+                <span ng-click=viewComment(feed) class="iconprocess cursor">{{feed.comments.length}} <img src="img/comment.png"></span>
+            </div>
+
+            <div class="post-comment" ng-repeat="comment in feed.comments" ng-show="feed.commentClick">
+                <div class="post-author">
+                    <span>
+                        <img ng-src="https://graph.facebook.com/{{comment.from.id}}/picture?type=square" alt="avatar-comment" width="40" height="40" />
+                    </span>
+                    <span><a class="name" href="http://www.facebook.com/{{comment.from.id}}">{{comment.from.name}}</a></span>
+                </div>
+                <div>
+                    <p>{{comment.message}}</p>
+                </div>
+                <div class="post-process"><span class="iconprocess">{{comment.likeCount}} <img src="img/like.png"></span></div>
+            </div><!-- end post-comment -->
+
+        </div>
+    </div>
+</div>
+<!-- end group-post -->

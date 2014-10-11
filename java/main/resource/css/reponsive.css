@@ -1,0 +1,86 @@
+/*   
+    Author     : Dang Khoa
+*/
+/* #Tablet (Landscape) 1024px
+----------------------------------------------------------------------*/
+@media only screen and (min-width: 960px) and (max-width: 1240px) {
+	/*---------------------Feed---------------*/
+	.group-post .post-item {
+		margin: 20px 20px;
+	}
+}
+
+/* #Tablet (Portrait) 768px
+----------------------------------------------------------------------*/
+@media only screen and (min-width: 768px) and (max-width: 959px) {
+	.left {
+		height: 100% !important;
+	}
+	/*---------------------Home---------------*/
+	.group-list .group-item .group-process {
+		padding-top: 20px;
+	}
+	/*--------------------Statistic-----------*/
+	.wrap-statistic {
+		margin: 30px 30px;
+	}
+	/*---------------------Feed---------------*/
+	.group-post .post-item {
+		margin: 20px 20px;
+	}
+}
+
+
+/* #Mobile (Landscape) 480px
+----------------------------------------------------------------------*/
+@media only screen and (min-width: 480px) and (max-width: 767px) {
+	.left {
+		height: 100% !important;
+	}
+	/*---------------------Home---------------*/
+	.group-list {
+		margin: 10px !important;
+	}
+	.group-list .group-item .group-process {
+		padding-top: 10px !important;
+	}
+	.group-list .group-item {
+		padding: 10px 0px !important;
+	}
+	/*------------------Statistic-------------*/
+	.wrap-statistic {
+		margin: 30px 30px;
+	}
+	/*---------------------Feed---------------*/
+	.group-post .post-item {
+		margin: 20px 10px;
+	}		
+}
+
+/*  #Mobile (Portrait) 320px
+----------------------------------------------------------------------*/
+@media only screen and (min-width: 100px) and (max-width: 479px) {
+	.left {
+		height: 100% !important;
+	}
+	/*---------------------Home---------------*/
+	.group-list {
+		margin: 10px !important;
+	}
+	.group-list .group-item .group-process {
+		padding-top: 10px !important;
+	}
+	.group-list .group-item {
+		padding: 10px 0px !important;
+	}
+	/*------------------Statistic-------------*/
+	.wrap-statistic {
+		margin: 30px 30px;
+	}
+	/*---------------------Feed---------------*/
+	.group-post .post-item {
+		margin: 20px 10px;
+	}	
+
+}
+
